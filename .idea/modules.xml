@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/youTrack.iml" filepath="$PROJECT_DIR$/youTrack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/youTrack-macro/youTrack-macro.iml" filepath="$PROJECT_DIR$/youTrack-macro/youTrack-macro.iml" />
+      <module fileurl="file://$PROJECT_DIR$/youTrack-config/youtrack-config.iml" filepath="$PROJECT_DIR$/youTrack-config/youtrack-config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/youTrack-config/youtrack-config-api/youtrack-config-api.iml" filepath="$PROJECT_DIR$/youTrack-config/youtrack-config-api/youtrack-config-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/youTrack-config/youTrack-config-platform/youtrack-config-platform.iml" filepath="$PROJECT_DIR$/youTrack-config/youTrack-config-platform/youtrack-config-platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/youTrack-config/youTrack-config-ui/youtrack-config-ui.iml" filepath="$PROJECT_DIR$/youTrack-config/youTrack-config-ui/youtrack-config-ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/youTrack-macro/youTrack-macro-default/youtrack-macro-default.iml" filepath="$PROJECT_DIR$/youTrack-macro/youTrack-macro-default/youtrack-macro-default.iml" />
+      <module fileurl="file://$PROJECT_DIR$/youTrack-macro/youTrack-macro-platform/youtrack-macro-platform.iml" filepath="$PROJECT_DIR$/youTrack-macro/youTrack-macro-platform/youtrack-macro-platform.iml" />
+    </modules>
+  </component>
+</project>

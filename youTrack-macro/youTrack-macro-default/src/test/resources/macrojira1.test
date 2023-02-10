@@ -1,0 +1,20 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.0
+.# Test youtrack macro called without a url parameter
+.# and no URL mapping defined
+.#-----------------------------------------------------
+{{youtrack/}}
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginMacroMarkerStandalone [YouTrack] []
+beginGroup [[class]=[xwikirenderingerror]]
+onWord [Failed to execute the [YouTrack] macro. Cause: [No YouTrack Server found. You must specify a YouTrack server, using the "url" macro parameter or using the "id" macro parameter to reference a server defined in the YouTrack Macro configuration.]. Click on this message for details.]
+endGroup [[class]=[xwikirenderingerror]]
+beginGroup [[class]=[xwikirenderingerrordescription hidden]]
+onVerbatim [org.xwiki.rendering.macro.MacroExecutionException: No YouTrack Server found. You must specify a YouTrack server, using the "url" macro parameter or using the "id" macro parameter to reference a server defined in the YouTrack Macro configuration.${{{regex:.*}}}] [false]
+endGroup [[class]=[xwikirenderingerrordescription hidden]]
+endMacroMarkerStandalone [YouTrack] []
+endDocument

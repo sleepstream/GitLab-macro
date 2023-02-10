@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.xwiki.commons:xwiki-commons-observation-local:14.10">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/xwiki/commons/xwiki-commons-observation-local/14.10/xwiki-commons-observation-local-14.10.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/xwiki/commons/xwiki-commons-observation-local/14.10/xwiki-commons-observation-local-14.10-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/xwiki/commons/xwiki-commons-observation-local/14.10/xwiki-commons-observation-local-14.10-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

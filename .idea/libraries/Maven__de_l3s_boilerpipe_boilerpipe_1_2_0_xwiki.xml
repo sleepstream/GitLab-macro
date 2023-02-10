@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: de.l3s.boilerpipe:boilerpipe:1.2.0-xwiki">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/l3s/boilerpipe/boilerpipe/1.2.0-xwiki/boilerpipe-1.2.0-xwiki.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/de/l3s/boilerpipe/boilerpipe/1.2.0-xwiki/boilerpipe-1.2.0-xwiki-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/l3s/boilerpipe/boilerpipe/1.2.0-xwiki/boilerpipe-1.2.0-xwiki-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

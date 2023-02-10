@@ -1,0 +1,7 @@
+# Project exclude paths
+/target/
+/youTrack-config/target/
+/youTrack-config/youtrack-config-api/target/
+/youTrack-config/youTrack-config-platform/target/
+/youTrack-macro/target/
+/youTrack-macro/youTrack-macro-default/target/

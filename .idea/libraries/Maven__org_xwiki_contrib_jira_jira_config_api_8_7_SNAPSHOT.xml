@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Maven: org.xwiki.contrib.jira:jira-config-api:8.7-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/xwiki/contrib/jira/jira-config-api/8.7-SNAPSHOT/jira-config-api-8.7-20230125.192113-2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/youTrack-config/youtrack-config-api/jira-config-api-8.7-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/xwiki/contrib/jira/jira-config-api/8.7-SNAPSHOT/jira-config-api-8.7-20230125.192113-2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/youTrack-config/youtrack-config-api/jira-config-api-8.7-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/xwiki/contrib/jira/jira-config-api/8.7-SNAPSHOT/jira-config-api-8.7-20230125.192113-2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.xwiki.contrib.youtrack</groupId>
+    <artifactId>youtrack-macro</artifactId>
+    <version>1.3</version>
+  </parent>
+  <artifactId>youtrack-macro-default</artifactId>
+  <name>YouTrack - Macro - Default Implementation</name>
+  <packaging>jar</packaging>
+  <description>Fetches information from a YouTrack server and displays them as a table, list or enumeration</description>
+  <properties>
+    <rendering.version>14.10</rendering.version>
+
+    <xwiki.jacoco.instructionRatio>0.62</xwiki.jacoco.instructionRatio>
+    <!-- WireMock outputs some logs when it's stopping, thus we need to turn off console log validation till we find
+         out how to tell WireMock to not do that. -->
+    <xwiki.surefire.captureconsole.skip>true</xwiki.surefire.captureconsole.skip>
+    <!-- Name to display by the Extension Manager -->
+    <xwiki.extension.name>YouTrack Base Macro</xwiki.extension.name>
+    <!-- The extension's category -->
+    <xwiki.extension.category>macro</xwiki.extension.category>
+    <xwiki.extension.components>
+      org.xwiki.rendering.macro.Macro/youtrack
+      org.xwiki.contrib.youtrack.macro.YouTrackDataSource/jql
+      org.xwiki.contrib.youtrack.macro.YouTrackDataSource/list
+      org.xwiki.contrib.youtrack.macro.YouTrackDisplayer/enum
+      org.xwiki.contrib.youtrack.macro.YouTrackDisplayer/list
+      org.xwiki.contrib.youtrack.macro.YouTrackDisplayer/table
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/default
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/updated
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/resolved
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/status
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/created
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/key
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/type
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/type/url
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/type/html
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/type/date
+    </xwiki.extension.components>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.xwiki.contrib.youtrack</groupId>
+      <artifactId>youtrack-config-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-api</artifactId>
+      <version>${rendering.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-transformation-macro</artifactId>
+      <version>${rendering.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+    <!-- Test Dependencies -->
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xwiki21</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-event</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-test</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-standalone</artifactId>
+      <version>2.17.0</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Wiremock requires servlet api 3.1 -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <!-- Ensure that we don't add any dependency on XWiki Platform since we want to allow pure
+                 XWiki Rendering users to be able to use the default youtrack macro. -->
+            <id>enforce-platform-isolation</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>org.xwiki.platform:*</exclude>
+                  </excludes>
+                </bannedDependencies>
+              </rules>
+            </configuration>
+          </execution>
+          <!-- Ensure that this macro doesn't uses the HTML macro. We want to ensure this since we want to let users be
+               able to disable the HTML macro (for security reasons) and the rest of XWiki should continue to work fine
+          -->
+          <execution>
+            <id>enforce-banned-dependencies</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>org.xwiki.rendering:xwiki-rendering-macro-html:*:jar:*</exclude>
+                  </excludes>
+                  <message>
+                    We need to be able to turn off the HTML Macro and still have a working system.
+                    Thus it is forbidden to depend on the HTML Macro.
+                  </message>
+                </bannedDependencies>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
