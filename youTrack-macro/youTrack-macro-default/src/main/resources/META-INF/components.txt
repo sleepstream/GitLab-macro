@@ -9,7 +9,7 @@ org.xwiki.contrib.youtrack.macro.internal.displayer.EnumYouTrackDisplayer
 org.xwiki.contrib.youtrack.macro.internal.displayer.field.DefaultYouTrackFieldDisplayer
 org.xwiki.contrib.youtrack.macro.internal.displayer.field.TypeYouTrackFieldDisplayer
 org.xwiki.contrib.youtrack.macro.internal.displayer.field.KeyYouTrackFieldDisplayer
-org.xwiki.contrib.youtrack.macro.internal.displayer.field.StatusYouTrackFieldDisplayer
+org.xwiki.contrib.youtrack.macro.internal.displayer.field.StateYouTrackFieldDisplayer
 org.xwiki.contrib.youtrack.macro.internal.displayer.field.CreatedYouTrackFieldDisplayer
 org.xwiki.contrib.youtrack.macro.internal.displayer.field.UpdatedYouTrackFieldDisplayer
 org.xwiki.contrib.youtrack.macro.internal.displayer.field.ResolvedYouTrackFieldDisplayer

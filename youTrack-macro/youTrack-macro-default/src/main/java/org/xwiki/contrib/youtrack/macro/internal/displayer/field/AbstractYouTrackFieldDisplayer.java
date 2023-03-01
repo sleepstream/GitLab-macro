@@ -22,10 +22,8 @@ package org.xwiki.contrib.youtrack.macro.internal.displayer.field;
 import org.jdom2.Element;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer;
-import org.xwiki.text.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.CustomFields;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 
 /**
  * Helper to extract field values from YouTrack XML.
@@ -43,36 +41,28 @@ public abstract class AbstractYouTrackFieldDisplayer implements YouTrackFieldDis
      * @param issue the XML representation of the YouTrack issue from which to extract the field's value
      * @return the string value of the field from the passed issue or null if not found
      */
-    protected String getValue(YouTrackField field, Element issue)
+    protected String getValue(YouTrackField field, ItemObject issue)
     {
-        List<String> texts = new ArrayList<>();
-
-        // First, look for the field name in the default fields
-        List<Element> textElements = issue.getChildren(field.getId());
-        if (textElements == null || textElements.isEmpty()) {
-            // Not found as a default field. Verify if it's a custom field.
-            Element customFieldsElement = issue.getChild("customfields");
-            if (customFieldsElement != null) {
-                for (Element customFieldElement : customFieldsElement.getChildren("customfield")) {
-                    String customFieldName = customFieldElement.getChildTextTrim("customfieldname");
-                    if (customFieldName != null && customFieldName.equals(field.getId())) {
-                        // Found a matching field, render its value and stop looking
-                        // Note: we only take into account the first "customfieldvalue" element for now. If a custom
-                        // field needs to handle multiple values, it'll need a custom field displayer defined.
-                        String value = customFieldElement.getChildren("customfieldvalues").get(0).getValue().trim();
-                        texts.add(value);
-                        break;
-                    }
-                }
-            }
-        } else {
-            for (Element element : textElements) {
-                if (element != null) {
-                    texts.add(element.getTextTrim());
-                }
-            }
+        if (field.equals(YouTrackField.TYPE)) {
+            return issue.getType();
+        }
+        if(field.equals(YouTrackField.SUMMARY)) {
+            return issue.getSummary();
+        }
+        if(field.equals(YouTrackField.KEY)) {
+            return issue.getId();
+        }
+        if(field.equals(YouTrackField.CREATED)) {
+            return issue.getCreated();
+        }
+        if(field.equals(YouTrackField.UPDATED)) {
+            return issue.getUpdated();
+        }
+        if(field.equals(YouTrackField.RESOLVED)) {
+            return issue.getResolved();
         }
 
-        return texts.isEmpty() ? null : StringUtils.join(texts, ", ");
+        CustomFields customField = issue.getCustomField(field.getId());
+        return customField.getValue().getName();
     }
 }

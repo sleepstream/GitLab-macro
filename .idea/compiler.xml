@@ -1,35 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+    </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="jira" target="11" />
-      <module name="jira-api" target="11" />
-      <module name="youTrack" target="11" />
-      <module name="youTrack-api" target="11" />
-      <module name="youTrack-config" target="11" />
-      <module name="youtrack-config" target="11" />
-      <module name="youtrack-config-api" target="11" />
-      <module name="youTrack-config-platform" target="11" />
-      <module name="youtrack-config-platform" target="11" />
-      <module name="youtrack-config-ui" target="11" />
-      <module name="youTrack-config-ui" target="11" />
-      <module name="youTrack-macro" target="11" />
-      <module name="youtrack-macro-default" target="11" />
-      <module name="youTrack-macro-default" target="11" />
-      <module name="youtrack-macro-platform" target="11" />
-      <module name="youTrack-REST" target="11" />
+      <module name="youTrack" target="1.8" />
+      <module name="youtrack-config" target="1.8" />
+      <module name="youtrack-config-api" target="1.8" />
+      <module name="youtrack-config-platform" target="1.8" />
+      <module name="youtrack-config-ui" target="1.8" />
+      <module name="youTrack-macro" target="1.8" />
+      <module name="youtrack-macro-default" target="1.8" />
+      <module name="youtrack-macro-platform" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="jira-api" options="-parameters -Xlint:all -Xlint:-options -parameters" />
       <module name="youTrack" options="" />
-      <module name="youTrack-REST" options="-parameters -Xlint:all -Xlint:-options -parameters" />
-      <module name="youTrack-api" options="-parameters -Xlint:all -Xlint:-options -parameters" />
-      <module name="youTrack-config-platform" options="-parameters -Xlint:all -Xlint:-options -parameters" />
-      <module name="youTrack-config-ui" options="-parameters -Xlint:all -Xlint:-options -parameters" />
       <module name="youTrack-macro" options="" />
-      <module name="youTrack-macro-default" options="-parameters -Xlint:all -Xlint:-options -parameters" />
       <module name="youtrack-config" options="" />
       <module name="youtrack-config-api" options="-parameters -Xlint:all -Xlint:-options -parameters" />
       <module name="youtrack-config-platform" options="-parameters -Xlint:all -Xlint:-options -parameters" />

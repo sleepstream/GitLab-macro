@@ -19,23 +19,23 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.displayer.field;
 
-import org.jdom2.Element;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.CustomFields;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.ImageBlock;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 
-import java.util.List;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Common Field Displayer for fields that need to display an image (eg for Status or Type fields).
+ * Common Field Displayer for fields that need to display an image (eg for State or Type fields).
  *
  * @version $Id$
  * @since 4.2M1
@@ -43,20 +43,15 @@ import java.util.HashMap;
 public abstract class AbstractImageYouTrackFieldDisplayer implements YouTrackFieldDisplayer
 {
     @Override
-    public List<Block> displayField(YouTrackField field, Element issue, YouTrackMacroParameters parameters)
+    public List<Block> displayField(YouTrackField field, ItemObject issue, YouTrackMacroParameters parameters)
     {
-        List<Block> result = Collections.emptyList();
-        Element fieldElement = getElement(issue);
-        if (fieldElement != null) {
-            String iconURL = getURL(issue);
-            if (iconURL != null) {
-                ResourceReference reference = new ResourceReference(iconURL, ResourceType.URL);
-                Map<String, String> resourceParameters = new HashMap<String, String>();
-                resourceParameters.put("alt", fieldElement.getText());
-                resourceParameters.put("title", fieldElement.getText());
-                result = Arrays.<Block>asList(new ImageBlock(reference, false, resourceParameters));
-            }
-        }
+        List<Block> result;
+        String key = issue.getId();
+        ResourceReference reference = new ResourceReference(issue.getLink(), ResourceType.URL);
+        Map<String, String> resourceParameters = new HashMap<String, String>();
+        resourceParameters.put("alt", issue.getSummary());
+        resourceParameters.put("title", issue.getType());
+        result = Arrays.<Block>asList(new ImageBlock(reference, false, resourceParameters));
         return result;
     }
 
@@ -64,11 +59,5 @@ public abstract class AbstractImageYouTrackFieldDisplayer implements YouTrackFie
      * @param issue the XML Element representing a YouTrack issue
      * @return the XML Element that contains the text to display as an image
      */
-    protected abstract Element getElement(Element issue);
-
-    /**
-     * @param issue the XML Element representing a YouTrack issue
-     * @return the URL to the image to display
-     */
-    protected abstract String getURL(Element issue);
+    protected abstract CustomFields getElement(ItemObject issue);
 }

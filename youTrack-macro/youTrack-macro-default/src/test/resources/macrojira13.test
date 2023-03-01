@@ -26,7 +26,7 @@ beginTableHeadCell
 onVerbatim [Summary] [true]
 endTableHeadCell
 beginTableHeadCell
-onVerbatim [Status] [true]
+onVerbatim [State] [true]
 endTableHeadCell
 beginTableHeadCell
 onVerbatim [Created Date] [true]

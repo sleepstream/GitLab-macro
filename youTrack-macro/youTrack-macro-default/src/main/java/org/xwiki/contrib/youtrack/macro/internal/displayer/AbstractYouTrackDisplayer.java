@@ -25,8 +25,8 @@ import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.youtrack.macro.YouTrackDisplayer;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer;
-import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
 import org.xwiki.contrib.youtrack.macro.YouTrackFields;
+import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
 
 import javax.inject.Inject;
 import java.util.List;

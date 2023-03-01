@@ -32,7 +32,9 @@ import org.xwiki.test.mockito.MockitoComponentManager;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.mockito.Mockito.when;
 
 /**

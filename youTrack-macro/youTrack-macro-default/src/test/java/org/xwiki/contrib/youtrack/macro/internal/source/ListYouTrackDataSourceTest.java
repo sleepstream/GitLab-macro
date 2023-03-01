@@ -21,9 +21,6 @@ package org.xwiki.contrib.youtrack.macro.internal.source;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.input.SAXBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.xwiki.contrib.youtrack.config.YouTrackConfiguration;
@@ -40,7 +37,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
-import static org.xwiki.contrib.youtrack.macro.YouTrackField.*;
 
 /**
  * Unit tests for {@link ListYouTrackDataSource} and
@@ -75,42 +71,32 @@ public class ListYouTrackDataSourceTest
             this.mocker.getComponentUnderTest().parseIds("\nISSUE-1\nISSUE-2 |Whatever \n ISSUE-3\n"));
     }
 
-    @Test
-    public void constructJQLQuery() throws Exception
-    {
-        List<Pair<String, String>> ids = Arrays.asList(
-            new ImmutablePair<>("ISSUE-1", ""),
-            new ImmutablePair<>("ISSUE-2", "Whatever"));
-        assertEquals("issueKey in (ISSUE-1,ISSUE-2)", this.mocker.getComponentUnderTest().constructJQLQuery(ids));
-    }
-
-    /**
-     * Verify several things:
-     * <ul>
-     *     <li>Issue order is preserved even though YouTrack returns them in no specific order</li>
-     *     <li>List fields are supported (for example the "version" field)</li>
-     *     <li>Notes are taken into account</li>
-     * </ul>
-     */
-    @Test
-    public void buildIssues() throws Exception
-    {
-        Document document = new SAXBuilder().build(getClass().getResourceAsStream("/__files/input.xml"));
-        List<Pair<String, String>> ids = Arrays.asList(
-            new ImmutablePair<>("XWIKI-1000", ""),
-            new ImmutablePair<>("XWIKI-1001", "Note"));
-
-        List<Element> issues = this.mocker.getComponentUnderTest().buildIssues(document, ids);
-
-        assertEquals(2, issues.size());
-        Element issue1 = issues.get(0);
-        assertEquals("XWIKI-1000", issue1.getChildTextTrim(KEY.getId()));
-        assertEquals("Improve PDF Output", issue1.getChildTextTrim(SUMMARY.getId()));
-        Element issue2 = issues.get(1);
-        assertEquals("XWIKI-1001", issue2.getChildTextTrim(KEY.getId()));
-        assertEquals("On jetty, non-default skins are not usable", issue2.getChildTextTrim(SUMMARY.getId()));
-        assertEquals("Note", issue2.getChildTextTrim(NOTE));
-    }
+//    /**
+//     * Verify several things:
+//     * <ul>
+//     *     <li>Issue order is preserved even though YouTrack returns them in no specific order</li>
+//     *     <li>List fields are supported (for example the "version" field)</li>
+//     *     <li>Notes are taken into account</li>
+//     * </ul>
+//     */
+//    @Test
+//    public void buildIssues() throws Exception
+//    {
+//        List<Pair<String, String>> ids = Arrays.asList(
+//            new ImmutablePair<>("XWIKI-1000", ""),
+//            new ImmutablePair<>("XWIKI-1001", "Note"));
+//
+//        List<Element> issues = this.mocker.getComponentUnderTest().buildIssues(document, ids);
+//
+//        assertEquals(2, issues.size());
+//        Element issue1 = issues.get(0);
+//        assertEquals("XWIKI-1000", issue1.getChildTextTrim(KEY.getId()));
+//        assertEquals("Improve PDF Output", issue1.getChildTextTrim(SUMMARY.getId()));
+//        Element issue2 = issues.get(1);
+//        assertEquals("XWIKI-1001", issue2.getChildTextTrim(KEY.getId()));
+//        assertEquals("On jetty, non-default skins are not usable", issue2.getChildTextTrim(SUMMARY.getId()));
+//        assertEquals("Note", issue2.getChildTextTrim(NOTE));
+//    }
 
     @Test
     public void getYouTrackServerWhenNoneDefined() throws Exception
@@ -149,20 +135,6 @@ public class ListYouTrackDataSourceTest
         YouTrackMacroParameters parameters = new YouTrackMacroParameters();
         parameters.setId("someid");
         assertEquals("http://localhost", this.mocker.getComponentUnderTest().getYouTrackServer(parameters).getURL());
-    }
-
-    @Test
-    public void getYouTrackServerWhenURLSpecifiedAndMatchingConfigurationExist() throws Exception
-    {
-        YouTrackConfiguration configuration = this.mocker.getInstance(YouTrackConfiguration.class);
-        when(configuration.getYouTrackServers()).thenReturn(Collections.singletonMap("whatever",
-            new YouTrackServer("http://localhost", "username", "password")));
-
-        YouTrackMacroParameters parameters = new YouTrackMacroParameters();
-        parameters.setURL("http://localhost");
-
-        assertEquals("http://localhost", this.mocker.getComponentUnderTest().getYouTrackServer(parameters).getURL());
-        assertEquals("username", this.mocker.getComponentUnderTest().getYouTrackServer(parameters).getUsername());
     }
 
     @Test

@@ -19,17 +19,17 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.source;
 
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.jdom2.Document;
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.youtrack.config.YouTrackServer;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.macro.MacroExecutionException;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Takes a JQL query from the Macro content and return matching YouTrack issues.
@@ -43,7 +43,7 @@ import java.util.Collection;
 public class JQLYouTrackDataSource extends AbstractYouTrackDataSource
 {
     @Override
-    public Collection<Element> getData(String macroContent, YouTrackMacroParameters parameters)
+    public List<ItemObject> getData(String macroContent, YouTrackMacroParameters parameters)
         throws MacroExecutionException
     {
         YouTrackServer youTrackServer = getYouTrackServer(parameters);
@@ -52,7 +52,7 @@ public class JQLYouTrackDataSource extends AbstractYouTrackDataSource
             throw new MacroExecutionException("Missing JQL query!");
         }
 
-        Document document = getXMLDocument(youTrackServer, macroContent, parameters.getMaxCount());
-        return buildIssues(document).values();
+        JsonObject document = getJsonDocument(youTrackServer, macroContent, parameters.getMaxCount());
+        return buildIssues(document, youTrackServer);
     }
 }

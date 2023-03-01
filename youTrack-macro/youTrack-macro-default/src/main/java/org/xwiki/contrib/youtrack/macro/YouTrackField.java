@@ -52,9 +52,9 @@ public class YouTrackField
     public static final YouTrackField TYPE;
 
     /**
-     * YouTrack Status field (eg Closed, Open, etc).
+     * YouTrack State field (eg Closed, Open, etc).
      */
-    public static final YouTrackField STATUS;
+    public static final YouTrackField STATE;
 
     /**
      * YouTrack Assignee field (the person assigned to fix the issue).
@@ -81,35 +81,35 @@ public class YouTrackField
      */
     public static final YouTrackField RESOLVED;
 
-    /**
-     * YouTrack Fix Version field (the version in which the issue was resolved or closed).
-     */
-    public static final YouTrackField FIXVERSION;
+//    /**
+//     * YouTrack Fix Version field (the version in which the issue was resolved or closed).
+//     */
+//    public static final YouTrackField FIXVERSION;
 
-    /**
-     * YouTrack Affected Versions field (the list of Versions for which the issue was reported).
-     */
-    public static final YouTrackField VERSION;
-
-    /**
-     * YouTrack Component field (the list of domains/categories for the issue).
-     */
-    public static final YouTrackField COMPONENT;
-
-    /**
-     * YouTrack Vote field (the number of votes for the issue).
-     */
-    public static final YouTrackField VOTES;
-
-    /**
-     * YouTrack Resolution field (eg Closed, Won't Fix, Duplicate; etc).
-     */
-    public static final YouTrackField RESOLUTION;
-
-    /**
-     * YouTrack link field (the URL to the issue on the YouTrack instance).
-     */
-    public static final YouTrackField LINK;
+//    /**
+//     * YouTrack Affected Versions field (the list of Versions for which the issue was reported).
+//     */
+//    public static final YouTrackField VERSION;
+//
+//    /**
+//     * YouTrack Component field (the list of domains/categories for the issue).
+//     */
+//    public static final YouTrackField COMPONENT;
+//
+//    /**
+//     * YouTrack Vote field (the number of votes for the issue).
+//     */
+//    public static final YouTrackField VOTES;
+//
+//    /**
+//     * YouTrack Resolution field (eg Closed, Won't Fix, Duplicate; etc).
+//     */
+//    public static final YouTrackField RESOLUTION;
+//
+//    /**
+//     * YouTrack link field (the URL to the issue on the YouTrack instance).
+//     */
+//    public static final YouTrackField LINK;
 
     /**
      * Special field used by the List Data Source which allows the user to define notes for a given issue.
@@ -125,20 +125,20 @@ public class YouTrackField
 
     private static final String DATE_TYPE = "date";
 
-    private static final String TYPE_ID = "type";
+    private static final String TYPE_ID = "$type";
 
     static {
         SUMMARY = new YouTrackField("summary", "Summary", TEXT_TYPE);
         DEFAULT_FIELDS.put(SUMMARY.getId(), SUMMARY);
 
-        KEY = new YouTrackField("key", "Key", TEXT_TYPE);
+        KEY = new YouTrackField("idReadable", "Key", TEXT_TYPE);
         DEFAULT_FIELDS.put(KEY.getId(), KEY);
 
         TYPE = new YouTrackField(TYPE_ID, "Type", TEXT_TYPE);
         DEFAULT_FIELDS.put(TYPE.getId(), TYPE);
 
-        STATUS = new YouTrackField("status", "Status", TEXT_TYPE);
-        DEFAULT_FIELDS.put(STATUS.getId(), STATUS);
+        STATE = new YouTrackField("state", "State", TEXT_TYPE);
+        DEFAULT_FIELDS.put(STATE.getId(), STATE);
 
         ASSIGNEE = new YouTrackField("assignee", "Assignee", TEXT_TYPE);
         DEFAULT_FIELDS.put(ASSIGNEE.getId(), ASSIGNEE);
@@ -155,23 +155,23 @@ public class YouTrackField
         RESOLVED = new YouTrackField("resolved", "Resolved Date", DATE_TYPE);
         DEFAULT_FIELDS.put(RESOLVED.getId(), RESOLVED);
 
-        FIXVERSION = new YouTrackField("fixVersion", "Fixed in", TEXT_TYPE);
-        DEFAULT_FIELDS.put(FIXVERSION.getId(), FIXVERSION);
+//        FIXVERSION = new YouTrackField("fixVersion", "Fixed in", TEXT_TYPE);
+//        DEFAULT_FIELDS.put(FIXVERSION.getId(), FIXVERSION);
 
-        VERSION = new YouTrackField("version", "Affected Versions", TEXT_TYPE);
-        DEFAULT_FIELDS.put(VERSION.getId(), VERSION);
+//        VERSION = new YouTrackField("version", "Affected Versions", TEXT_TYPE);
+//        DEFAULT_FIELDS.put(VERSION.getId(), VERSION);
 
-        COMPONENT = new YouTrackField("component", "Component", TEXT_TYPE);
-        DEFAULT_FIELDS.put(COMPONENT.getId(), COMPONENT);
-
-        VOTES = new YouTrackField("votes", "Votes", "number");
-        DEFAULT_FIELDS.put(VOTES.getId(), VOTES);
-
-        RESOLUTION = new YouTrackField("resolution", "Resolution", TEXT_TYPE);
-        DEFAULT_FIELDS.put(RESOLUTION.getId(), RESOLUTION);
-
-        LINK = new YouTrackField("link", "Link", "url");
-        DEFAULT_FIELDS.put(LINK.getId(), LINK);
+//        COMPONENT = new YouTrackField("component", "Component", TEXT_TYPE);
+//        DEFAULT_FIELDS.put(COMPONENT.getId(), COMPONENT);
+//
+//        VOTES = new YouTrackField("votes", "Votes", "number");
+//        DEFAULT_FIELDS.put(VOTES.getId(), VOTES);
+//
+//        RESOLUTION = new YouTrackField("resolution", "Resolution", TEXT_TYPE);
+//        DEFAULT_FIELDS.put(RESOLUTION.getId(), RESOLUTION);
+//
+//        LINK = new YouTrackField("link", "Link", "url");
+//        DEFAULT_FIELDS.put(LINK.getId(), LINK);
     }
     private String id;
 

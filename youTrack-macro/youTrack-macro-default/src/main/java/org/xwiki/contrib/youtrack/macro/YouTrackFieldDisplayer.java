@@ -19,8 +19,8 @@
  */
 package org.xwiki.contrib.youtrack.macro;
 
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Role;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Defines how to display a YouTrack issue field (for example the "Key" field can be displayed
  * with a link to the YouTrack
- * issue, date fields can have their dates formatted in a special way, "status" field can be
+ * issue, date fields can have their dates formatted in a special way, "state" field can be
  * displayed with an icon,
  * etc).
  *
@@ -48,5 +48,5 @@ public interface YouTrackFieldDisplayer
      *                   configuration information
      * @return the list of Blocks to display the passed field
      */
-    List<Block> displayField(YouTrackField field, Element issue, YouTrackMacroParameters parameters);
+    List<Block> displayField(YouTrackField field, ItemObject issue, YouTrackMacroParameters parameters);
 }

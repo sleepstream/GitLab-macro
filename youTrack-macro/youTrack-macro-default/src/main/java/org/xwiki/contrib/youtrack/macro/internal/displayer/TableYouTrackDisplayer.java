@@ -20,17 +20,17 @@
 package org.xwiki.contrib.youtrack.macro.internal.displayer;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackFields;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.block.TableHeadCellBlock;
-import org.xwiki.rendering.block.VerbatimBlock;
-import org.xwiki.rendering.block.TableRowBlock;
 import org.xwiki.rendering.block.TableBlock;
 import org.xwiki.rendering.block.TableCellBlock;
+import org.xwiki.rendering.block.TableHeadCellBlock;
+import org.xwiki.rendering.block.TableRowBlock;
+import org.xwiki.rendering.block.VerbatimBlock;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -54,11 +54,11 @@ public class TableYouTrackDisplayer extends AbstractYouTrackDisplayer
      * Default list of YouTrack fields to display.
      */
     private static final YouTrackFields FIELDS = new YouTrackFields(
-        Arrays.asList(YouTrackField.TYPE, YouTrackField.KEY, YouTrackField.SUMMARY, YouTrackField.STATUS,
+        Arrays.asList(YouTrackField.TYPE, YouTrackField.KEY, YouTrackField.SUMMARY, YouTrackField.STATE,
                 YouTrackField.CREATED));
 
     @Override
-    public List<Block> display(Collection<Element> issues, YouTrackMacroParameters parameters)
+    public List<Block> display(Collection<ItemObject> issues, YouTrackMacroParameters parameters)
     {
         List<Block> rowBlocks = new ArrayList<>();
 
@@ -73,7 +73,7 @@ public class TableYouTrackDisplayer extends AbstractYouTrackDisplayer
         rowBlocks.add(new TableRowBlock(headerCellBlocks));
 
         // Construct the data rows, one row per issue
-        for (Element issue : issues) {
+        for (ItemObject issue : issues) {
             List<Block> dataCellBlocks = new ArrayList<>();
             for (YouTrackField field : fields) {
                 // Use the displayer for the field

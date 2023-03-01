@@ -19,6 +19,8 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.source;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -34,6 +36,7 @@ import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.xwiki.component.annotation.Component;
@@ -49,7 +52,7 @@ import java.net.URL;
  * @version $Id$
  * @since 8.5
  */
-@Component(roles = { HTTPYouTrackFetcher.class })
+@Component(roles = {HTTPYouTrackFetcher.class})
 @Singleton
 public class HTTPYouTrackFetcher
 {
@@ -62,7 +65,7 @@ public class HTTPYouTrackFetcher
      * @return the {@link Document} object containing the XML data
      * @throws Exception if an error happened during the fetch or if the passed URL is malformed
      */
-    public Document fetch(String urlString, YouTrackServer youTrackServer) throws Exception
+    public JsonObject fetch(String urlString, YouTrackServer youTrackServer) throws Exception
     {
         HttpGet httpGet = new HttpGet(urlString);
         CloseableHttpClient httpClient = createHttpClientBuilder(youTrackServer).build();
@@ -104,19 +107,20 @@ public class HTTPYouTrackFetcher
         return new HttpHost(youtrackURL.getHost(), youtrackURL.getPort(), youtrackURL.getProtocol());
     }
 
-    protected Document retrieveRemoteDocument(CloseableHttpClient httpClient, HttpGet httpGet, HttpHost targetHost,
+    protected JsonObject retrieveRemoteDocument(CloseableHttpClient httpClient, HttpGet httpGet, HttpHost targetHost,
         HttpClientContext context) throws Exception
     {
         try (CloseableHttpResponse response = httpClient.execute(targetHost, httpGet, context)) {
             // Only parse the content if there was no error.
             if (response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300) {
                 HttpEntity entity = response.getEntity();
-                return createSAXBuilder().build(entity.getContent());
+                String responseString = EntityUtils.toString(entity);
+                return new Gson().fromJson(responseString, JsonObject.class);
             } else {
                 // The error message is in the HTML. We extract it to perform some good error-reporting, by extracting
                 // it from the <h1> tag.
                 throw new Exception(String.format("Error = [%s]. URL = [%s]",
-                    EXTRACTOR.extract(response.getEntity().getContent()), httpGet.getURI().toString()));
+                EXTRACTOR.extract(response.getEntity().getContent()), httpGet.getURI().toString()));
             }
         }
     }

@@ -32,10 +32,10 @@ import java.util.Properties;
  */
 public class YouTrackMacroParameters
 {
-    /**
-     * @see #getURL()
-     */
-    private String url;
+//    /**
+//     * @see #getURL()
+//     */
+//    private String url;
 
     /**
      * @see #getSource()
@@ -50,7 +50,7 @@ public class YouTrackMacroParameters
     /**
      * @see #getId()
      */
-    private String id;
+    private String id = "1";
 
     private Properties extraParameters = new Properties();
 
@@ -66,22 +66,22 @@ public class YouTrackMacroParameters
 
     private int maxCount = -1;
 
-    /**
-     * @param url see {@link #getURL()}
-     */
-    @PropertyDescription("the youtrack. Server URL")
-    public void setURL(String url)
-    {
-        this.url = url;
-    }
-
-    /**
-     * @return the youtrack. Server URL (e.g. {@code http://youtrack..xwiki.org})
-     */
-    public String getURL()
-    {
-        return this.url;
-    }
+//    /**
+//     * @param url see {@link #getURL()}
+//     */
+//    @PropertyDescription("the youtrack. Server URL")
+//    public void setURL(String url)
+//    {
+//        this.url = url;
+//    }
+//
+//    /**
+//     * @return the youtrack. Server URL (e.g. {@code http://youtrack..xwiki.org})
+//     */
+//    public String getURL()
+//    {
+//        return this.url;
+//    }
 
     /**
      * @param id see {@link #getId()}

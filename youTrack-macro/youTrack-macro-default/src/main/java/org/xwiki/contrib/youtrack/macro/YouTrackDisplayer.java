@@ -19,8 +19,8 @@
  */
 package org.xwiki.contrib.youtrack.macro;
 
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Role;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
 
 import java.util.Collection;
@@ -47,5 +47,5 @@ public interface YouTrackDisplayer
      *            display
      * @return the list of Blocks rerpesenting what to display
      */
-    List<Block> display(Collection<Element> issues, YouTrackMacroParameters parameters);
+    List<Block> display(Collection<ItemObject> issues, YouTrackMacroParameters parameters);
 }

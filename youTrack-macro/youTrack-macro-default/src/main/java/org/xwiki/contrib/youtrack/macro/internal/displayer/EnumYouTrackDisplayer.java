@@ -19,21 +19,21 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.displayer;
 
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackFields;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.SpaceBlock;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Displays YouTrack issues next to each other (like an enumeration) in inline mode.
@@ -49,18 +49,18 @@ public class EnumYouTrackDisplayer extends AbstractYouTrackDisplayer
     /**
      * Default list of YouTrack fields to display.
      */
-    private static final YouTrackFields FIELDS = new YouTrackFields(Arrays.asList(YouTrackField.STATUS,
+    private static final YouTrackFields FIELDS = new YouTrackFields(Arrays.asList(YouTrackField.STATE,
             YouTrackField.KEY));
 
     @Override
-    public List<Block> display(Collection<Element> issues, YouTrackMacroParameters parameters)
+    public List<Block> display(Collection<ItemObject> issues, YouTrackMacroParameters parameters)
     {
         List<Block> blocks = new ArrayList<>();
 
         YouTrackFields fields = normalizeFields(parameters);
-        Iterator<Element> issueIt = issues.iterator();
+        Iterator<ItemObject> issueIt = issues.iterator();
         while (issueIt.hasNext()) {
-            Element issue = issueIt.next();
+            ItemObject issue = issueIt.next();
             Iterator<YouTrackField> it = fields.iterator();
             while (it.hasNext()) {
                 YouTrackField field = it.next();

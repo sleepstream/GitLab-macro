@@ -19,21 +19,22 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.source;
 
-import org.jdom2.Document;
-import org.jdom2.Element;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.xwiki.contrib.youtrack.config.YouTrackConfiguration;
 import org.xwiki.contrib.youtrack.config.YouTrackServer;
 import org.xwiki.contrib.youtrack.macro.YouTrackDataSource;
-import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.macro.MacroExecutionException;
 
 import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Common implementation for YouTrack Data Source that knowns how to execute
@@ -49,7 +50,7 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
      * URL Prefix to use to build the full JQL URL (doesn't contain the JQL query itself which needs to be appended).
      */
     private static final String JQL_URL_PREFIX =
-        "/api/issues/";
+        "api/issues/";
 
     @Inject
     private YouTrackConfiguration configuration;
@@ -64,19 +65,19 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
     private YouTrackServerResolver youtrackServerResolver;
 
     /**
-     * @param document the XML document from which to extract YouTrack issues
+     * @param jsonObject the XML document from which to extract YouTrack issues
+     * @param youTrackServer
      * @return the list of XML Elements for each YouTrack issue, indexed in a Map with the issue id as the key
      */
-    protected Map<String, Element> buildIssues(Document document)
+    protected List<ItemObject> buildIssues(JsonObject jsonObject, YouTrackServer youTrackServer)
     {
-        Map<String, Element> issues = new LinkedHashMap<>();
-        Element channel = document.getRootElement().getChild("channel");
-        if (channel != null) {
-            for (Element item : channel.getChildren("item")) {
-                issues.put(item.getChildText(YouTrackField.KEY.getId()), item);
-            }
-        }
-        return issues;
+
+        Gson gson = new GsonBuilder().create();
+        ItemObject item = gson.fromJson(jsonObject, ItemObject.class);
+
+        item.setLink(youTrackServer.getURL() + "issue/" + item.getId());
+
+        return Collections.singletonList(item);
     }
 
     /**
@@ -86,17 +87,17 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
      * @return the XML document containing the matching YouTrack issues
      * @throws MacroExecutionException if the YouTrack issues cannot be retrieved
      */
-    public Document getXMLDocument(YouTrackServer youTrackServer, String jqlQuery, int maxCount)
+    public JsonObject getJsonDocument(YouTrackServer youTrackServer, String jqlQuery, int maxCount)
         throws MacroExecutionException
     {
-        Document document;
-
+        JsonObject document;
+        String urlString = computeFullURL(youTrackServer, jqlQuery, maxCount);
         try {
-            String urlString = computeFullURL(youTrackServer, jqlQuery, maxCount);
             document = this.youtrackFetcher.fetch(urlString, youTrackServer);
         } catch (Exception e) {
-            throw new MacroExecutionException(String.format("Failed to retrieve YouTrack data from [%s] for JQL [%s]",
-                youTrackServer.getURL(), jqlQuery), e);
+            throw new MacroExecutionException(String.format("Failed to retrieve YouTrack data from [%s] for JQL [%s] "
+                            + "url [%s]",
+                youTrackServer.getURL(), jqlQuery, urlString), e);
         }
         return document;
     }
@@ -110,10 +111,10 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
 //            additionalQueryString.append("&tempMax=").append(maxCount);
 //        }
 
-        additionalQueryString.append("?fields=$type,id,summary,"
-                + "customFields($type,id,projectCustomField($type,id,field($type,id,name))"
-                + ",value($type,avatarUrl,buildLink,color(id),fullName,id,isResolved,localizedName,login,minutes,name"
-                + ",presentation,text))");
+        additionalQueryString.append("?fields=id,idReadable,summary,type,created,updated,resolved,"
+                + "customFields(name,value(name))"
+                + "&customFields=type&customFields=assignee&customFields=priority&customFields=state");
+//                + "&customFields=fix+versions");
 
         // Note: we encode using UTF8 since it's the W3C recommendation.
         // See http://www.w3.org/TR/html40/appendix/notes.html#non-ascii-chars

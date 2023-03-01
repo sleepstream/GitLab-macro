@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.2" reference="YouTrack.YouTrackConfigSheet" locale="">
+<xwikidoc version="1.5" reference="YouTrack.YouTrackConfigSheet" locale="">
   <web>YouTrack</web>
   <name>YouTrackConfigSheet</name>
   <language/>
@@ -51,15 +51,15 @@
     &lt;fieldset&gt;
       &lt;dl&gt;
         &lt;dt&gt;
-          &lt;label for='YouTrackInstances'&gt;$services.localization.render('YouTrack.config.label')&lt;/label&gt;
-          &lt;span class='xHint'&gt;$services.localization.render('YouTrack.config.label.hint')&lt;/span&gt;
+          &lt;label for=youtrackInstances'&gt;$services.localization.render('youtrack.config.label')&lt;/label&gt;
+          &lt;span class='xHint'&gt;$services.localization.render('youtrack.config.label.hint')&lt;/span&gt;
         &lt;/dt&gt;
         &lt;dd&gt;
           &lt;br /&gt;
           &lt;div id='YouTrackInstances'&gt;
 {{/html}}
 
-|=$services.localization.render('YouTrack.config.id')|=$services.localization.render('YouTrack.config.url')|=$services.localization.render('YouTrack.config.username')|=$services.localization.render('YouTrack.config.password')|=$services.localization.render('YouTrack.config.delete')
+|=$services.localization.render('youtrack.config.id')|=$services.localization.render('youtrack.config.url')|=$services.localization.render('youtrack.config.username')|=$services.localization.render('youtrack.config.password')|=$services.localization.render('youtrack.config.delete')
 #foreach($serverObject in $configDoc.getObjects($configClassName))
   #set ($deleteURL = $configDoc.getURL('objectremove', "form_token=$!{services.csrf.getToken()}&amp;classname=${escapetool.url($configClassName)}&amp;classid=${serverObject.number}&amp;xredirect=${escapetool.url($redirect)}"))
   |$serverObject.display('id', 'edit')|$serverObject.display('url', 'edit')|$serverObject.display('username', 'edit') |$serverObject.display('password', 'edit')|=[[image:icon:cross&gt;&gt;path:$deleteURL]]
@@ -71,9 +71,9 @@
       &lt;/dl&gt;
     &lt;/fieldset&gt;
     &lt;input type="hidden" name="form_token" value="$!{services.csrf.getToken()}" /&gt;
-    &lt;input type="submit" value="$services.localization.render('YouTrack.config.save')" name="formactionsac" class="button" /&gt;
+    &lt;input type="submit" value="$services.localization.render('youtrack.config.save')" name="formactionsac" class="button" /&gt;
     &lt;span class="buttonwrapper"&gt;
-      &lt;a href="$configDoc.getURL('objectadd', "classname=$escapetool.url($configClassName)&amp;amp;form_token=$!{services.csrf.getToken()}&amp;amp;xredirect=$escapetool.url(${redirect})")" class="xobject-add-control"&gt;$services.localization.render('YouTrack.config.add')&lt;/a&gt;
+      &lt;a href="$configDoc.getURL('objectadd', "classname=$escapetool.url($configClassName)&amp;amp;form_token=$!{services.csrf.getToken()}&amp;amp;xredirect=$escapetool.url(${redirect})")" class="xobject-add-control"&gt;$services.localization.render('youtrack.config.add')&lt;/a&gt;
     &lt;/span&gt;
   &lt;/form&gt;
 {{/html}}

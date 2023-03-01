@@ -19,9 +19,10 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.displayer.field;
 
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.CustomFields;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -38,14 +39,9 @@ import javax.inject.Singleton;
 public class TypeYouTrackFieldDisplayer extends AbstractImageYouTrackFieldDisplayer
 {
     @Override
-    protected Element getElement(Element issue)
+    protected CustomFields getElement(ItemObject issue)
     {
-        return issue.getChild(YouTrackField.TYPE.getId());
+        return issue.getCustomField(YouTrackField.TYPE.getId());
     }
 
-    @Override
-    protected String getURL(Element issue)
-    {
-        return getElement(issue).getAttributeValue("iconUrl");
-    }
 }

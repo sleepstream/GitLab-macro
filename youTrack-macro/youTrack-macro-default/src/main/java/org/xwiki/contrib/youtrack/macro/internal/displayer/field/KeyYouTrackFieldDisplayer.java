@@ -19,18 +19,20 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.displayer.field;
 
-import org.jdom2.Element;
+import lombok.SneakyThrows;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.DefaultYouTrackServerResolver;
+import org.xwiki.contrib.youtrack.macro.internal.source.YouTrackServerResolver;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.block.FormatBlock;
 import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.block.VerbatimBlock;
-import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
+import org.xwiki.rendering.macro.MacroExecutionException;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -45,32 +47,19 @@ import java.util.List;
  * @since 4.2M1
  */
 @Component
-@Named("key")
+@Named("idReadable")
 @Singleton
-public class KeyYouTrackFieldDisplayer implements YouTrackFieldDisplayer
-{
+public class KeyYouTrackFieldDisplayer implements YouTrackFieldDisplayer {
     @Override
-    public List<Block> displayField(YouTrackField field, Element issue, YouTrackMacroParameters parameters)
+    public List<Block> displayField(YouTrackField field, ItemObject issue, YouTrackMacroParameters parameters)
     {
         List<Block> result = Collections.emptyList();
-        String key = issue.getChildText(YouTrackField.KEY.getId());
+        String key = issue.getId();
         if (key != null) {
-            String link = issue.getChildText(YouTrackField.LINK.getId());
             List<Block> labelBlocks = Arrays.<Block>asList(new VerbatimBlock(key, true));
-
-            // If the Issue is closed then display it striked-out
-            String resolutionId = issue.getChild(YouTrackField.RESOLUTION.getId()).getAttributeValue("id");
-            if (!"-1".equals(resolutionId)) {
-                // The issue is resolved
-                labelBlocks = Arrays.<Block>asList(new FormatBlock(labelBlocks, Format.STRIKEDOUT));
-            }
-
-            if (link != null) {
-                ResourceReference reference = new ResourceReference(link, ResourceType.URL);
-                result = Arrays.<Block>asList(new LinkBlock(labelBlocks, reference, true));
-            } else {
-                result = labelBlocks;
-            }
+            ResourceReference reference = null;
+                reference = new ResourceReference(issue.getLink(), ResourceType.URL);
+            result = Arrays.<Block>asList(new LinkBlock(labelBlocks, reference, true));
         }
         return result;
     }

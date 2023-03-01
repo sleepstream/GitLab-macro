@@ -20,10 +20,10 @@
 package org.xwiki.contrib.youtrack.macro.internal.displayer.field;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.block.VerbatimBlock;
@@ -48,7 +48,7 @@ import java.util.List;
 public class URLYouTrackFieldDisplayer extends AbstractYouTrackFieldDisplayer
 {
     @Override
-    public List<Block> displayField(YouTrackField field, Element issue, YouTrackMacroParameters parameters)
+    public List<Block> displayField(YouTrackField field, ItemObject issue, YouTrackMacroParameters parameters)
     {
         List<Block> result = Collections.emptyList();
 

@@ -50,40 +50,25 @@ public class DefaultYouTrackServerResolver implements YouTrackServerResolver
         // Check if the user has provided an explicit url in the macro. If so, try to find a matching URL in the
         // configured YouTrack Server list in order to find if there are any credentials. If not found, return a public
         // YouTrack instance.
-        String url = parameters.getURL();
-        if (StringUtils.isBlank(url)) {
-            // If not, then check if the user has provided a server id in the macro
-            String id = parameters.getId();
-            if (StringUtils.isBlank(id)) {
-                // Note: we could have decided that if there's a single YouTrack server definition
-                // we would use that id by
-                // default. However doing so would break all Macro calls not specifying an id
-                // as soon as a second YouTrack
-                // server definiton is added later on...
-                throw new MacroExecutionException("No YouTrack Server found. You must specify a "
-                        + "YouTrack server, using the "
-                    + "\"url\" macro parameter or using the \"id\" macro parameter to reference a server defined in "
-                    + "the YouTrack Macro configuration.");
-            }
-            youTrackServer = this.configuration.getYouTrackServers().get(id);
-            if (youTrackServer == null) {
-                throw new MacroExecutionException(String.format("The YouTrack Server id [%s] is not "
-                        + "defined in the macro's "
-                    + "configuration. Please fix the id or add a new server in the YouTrack Macro configuration.", id));
-            }
-        } else {
-            youTrackServer = null;
-            for (YouTrackServer server : this.configuration.getYouTrackServers().values()) {
-                if (server.getURL().equals(url)) {
-                    youTrackServer = server;
-                    break;
-                }
-            }
-            if (youTrackServer == null) {
-                youTrackServer = new YouTrackServer(url);
-            }
+        String id = parameters.getId();
+        if (StringUtils.isBlank(id)) {
+            // Note: we could have decided that if there's a single YouTrack server definition
+            // we would use that id by
+            // default. However doing so would break all Macro calls not specifying an id
+            // as soon as a second YouTrack
+            // server definiton is added later on...
+            throw new MacroExecutionException("No YouTrack Server found. You must specify a "
+                    + "YouTrack server, using the "
+                + "\"url\" macro parameter or using the \"id\" macro parameter to reference a server defined in "
+                + "the YouTrack Macro configuration.");
         }
-
+        youTrackServer = this.configuration.getYouTrackServers().get(id);
+        if (youTrackServer == null) {
+            throw new MacroExecutionException(String.format("The YouTrack Server id [%s] is not "
+                    + "defined in the macro's "
+                + "configuration. Please fix the id or add a new server in the YouTrack Macro configuration. %s", id,
+                    this.configuration.getYouTrackServers()));
+        }
         return youTrackServer;
     }
 }

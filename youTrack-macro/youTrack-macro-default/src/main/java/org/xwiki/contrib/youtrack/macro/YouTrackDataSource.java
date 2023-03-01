@@ -19,11 +19,11 @@
  */
 package org.xwiki.contrib.youtrack.macro;
 
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Role;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.macro.MacroExecutionException;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Source to fetch data from a YouTrack instance.
@@ -40,6 +40,6 @@ public interface YouTrackDataSource
      * @return the list of matching YouTrack issues
      * @throws MacroExecutionException in case of an error while getting the YouTrack data
      */
-    Collection<Element> getData(String macroContent, YouTrackMacroParameters parameters)
+    List<ItemObject> getData(String macroContent, YouTrackMacroParameters parameters)
         throws MacroExecutionException;
 }

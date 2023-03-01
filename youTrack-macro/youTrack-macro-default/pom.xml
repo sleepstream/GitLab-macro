@@ -25,14 +25,13 @@
   <parent>
     <groupId>org.xwiki.contrib.youtrack</groupId>
     <artifactId>youtrack-macro</artifactId>
-    <version>1.3</version>
+    <version>1.3.23</version>
   </parent>
   <artifactId>youtrack-macro-default</artifactId>
   <name>YouTrack - Macro - Default Implementation</name>
   <packaging>jar</packaging>
   <description>Fetches information from a YouTrack server and displays them as a table, list or enumeration</description>
   <properties>
-    <rendering.version>14.10</rendering.version>
 
     <xwiki.jacoco.instructionRatio>0.62</xwiki.jacoco.instructionRatio>
     <!-- WireMock outputs some logs when it's stopping, thus we need to turn off console log validation till we find
@@ -52,7 +51,7 @@
       org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/default
       org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/updated
       org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/resolved
-      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/status
+      org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/state
       org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/created
       org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/key
       org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer/type
@@ -117,13 +116,28 @@
       <version>3.1.0</version>
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>com.github.openjson</groupId>
+          <artifactId>openjson</artifactId>
+          <version>1.0.12</version>
+          <scope>compile</scope>
+      </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+      <dependency>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok</artifactId>
+          <version>1.18.24</version>
+        <scope>provided</scope>
+      </dependency>
   </dependencies>
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0</version>
         <executions>
           <execution>
             <!-- Ensure that we don't add any dependency on XWiki Platform since we want to allow pure

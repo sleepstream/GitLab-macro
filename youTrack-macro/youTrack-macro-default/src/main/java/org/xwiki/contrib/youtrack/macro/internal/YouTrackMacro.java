@@ -34,7 +34,6 @@ import org.xwiki.rendering.transformation.MacroTransformationContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -72,7 +71,7 @@ public class YouTrackMacro extends AbstractMacro<YouTrackMacroParameters>
     {
         super("YouTrack", DESCRIPTION, new DefaultContentDescriptor(CONTENT_DESCRIPTION),
                 YouTrackMacroParameters.class);
-        setDefaultCategories(Collections.singleton(DEFAULT_CATEGORY_CONTENT));
+        setDefaultCategory(DEFAULT_CATEGORY_CONTENT);
     }
 
     @Override

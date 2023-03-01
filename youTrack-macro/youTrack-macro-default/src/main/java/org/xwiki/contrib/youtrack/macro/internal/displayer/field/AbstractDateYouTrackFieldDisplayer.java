@@ -19,9 +19,9 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.displayer.field;
 
-import org.jdom2.Element;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.VerbatimBlock;
 
@@ -53,7 +53,7 @@ public abstract class AbstractDateYouTrackFieldDisplayer extends AbstractYouTrac
     private DateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 
     @Override
-    public List<Block> displayField(YouTrackField field, Element issue, YouTrackMacroParameters parameters)
+    public List<Block> displayField(YouTrackField field, ItemObject issue, YouTrackMacroParameters parameters)
     {
         List<Block> result;
         String date = getValue(field, issue);

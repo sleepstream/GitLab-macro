@@ -19,10 +19,24 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.displayer.field;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.contrib.youtrack.macro.YouTrackField;
+import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
+import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.LinkBlock;
+import org.xwiki.rendering.block.VerbatimBlock;
+import org.xwiki.rendering.block.WordBlock;
+import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Generic displayer for date-type fields.
@@ -35,4 +49,16 @@ import javax.inject.Singleton;
 @Singleton
 public class DateYouTrackFieldDisplayer extends AbstractDateYouTrackFieldDisplayer
 {
+    @Override
+    public List<Block> displayField(YouTrackField field, ItemObject issue, YouTrackMacroParameters parameters)
+    {
+        List<Block> result = Collections.emptyList();
+
+        String value = getValue(field, issue);
+        if (value != null) {
+            result = Arrays.<Block>asList(new WordBlock(new SimpleDateFormat("yyyy-MM-dd")
+                    .format(Long.valueOf(value))));
+        }
+        return result;
+    }
 }

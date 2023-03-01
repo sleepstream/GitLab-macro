@@ -19,11 +19,11 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.displayer;
 
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackFields;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
 import org.xwiki.rendering.block.ListItemBlock;
@@ -31,11 +31,11 @@ import org.xwiki.rendering.block.SpaceBlock;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Displays YouTrack issues as a list (ie one under another).
@@ -52,15 +52,15 @@ public class ListYouTrackDisplayer extends AbstractYouTrackDisplayer
      * Default list of YouTrack fields to display.
      */
     private static final YouTrackFields FIELDS = new YouTrackFields(
-        Arrays.asList(YouTrackField.STATUS, YouTrackField.KEY, YouTrackField.SUMMARY));
+        Arrays.asList(YouTrackField.STATE, YouTrackField.KEY, YouTrackField.SUMMARY));
 
     @Override
-    public List<Block> display(Collection<Element> issues, YouTrackMacroParameters parameters)
+    public List<Block> display(Collection<ItemObject> issues, YouTrackMacroParameters parameters)
     {
         List<Block> listItemBlocks = new ArrayList<>();
 
         YouTrackFields fields = normalizeFields(parameters);
-        for (Element issue : issues) {
+        for (ItemObject issue : issues) {
             List<Block> itemBlocks = new ArrayList<>();
             Iterator<YouTrackField> it = fields.iterator();
             while (it.hasNext()) {

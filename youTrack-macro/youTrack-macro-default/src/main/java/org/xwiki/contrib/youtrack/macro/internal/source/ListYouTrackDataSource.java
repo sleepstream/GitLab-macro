@@ -19,24 +19,22 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.source;
 
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jdom2.Document;
-import org.jdom2.Element;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.youtrack.config.YouTrackServer;
-import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.macro.MacroExecutionException;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.List;
-import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -65,7 +63,7 @@ public class ListYouTrackDataSource extends AbstractYouTrackDataSource
     private static final String PIPE = "|";
 
     @Override
-    public Collection<Element> getData(String macroContent, YouTrackMacroParameters parameters)
+    public List<ItemObject> getData(String macroContent, YouTrackMacroParameters parameters)
         throws MacroExecutionException
     {
         YouTrackServer youTrackServer = getYouTrackServer(parameters);
@@ -75,58 +73,31 @@ public class ListYouTrackDataSource extends AbstractYouTrackDataSource
             throw new MacroExecutionException("Empty list of YouTrack ids!");
         }
 
-        Document document = getXMLDocument(youTrackServer, constructJQLQuery(ids), parameters.getMaxCount());
-        return buildIssues(document, ids);
+        return buildIssues(ids, youTrackServer, parameters);
     }
 
     /**
-     * @param document the XML document containing all the YouTrack issues and which was returned
-     *                 by the YouTrack server
+
      * @param issueIds the list of YouTrack issue ids specified by the user
      * @return the list of YouTrack issues (returned as XML elements), in the same order as the
      * YouTrack issue id list specified
      *         by the user
      */
-    public List<Element> buildIssues(Document document, List<Pair<String, String>> issueIds)
+    public List<ItemObject> buildIssues(List<Pair<String, String>> issueIds,
+                                        YouTrackServer youTrackServer, YouTrackMacroParameters parameters)
+            throws MacroExecutionException
     {
         // Note: YouTrack doesn't return items in the order specified in the JQL query, thus we need to manually order
         // them in the same order as passed in the issueIds parameter.
-        Map<String, Element> mappedIssues = buildIssues(document);
 
-        List<Element> issues = new ArrayList<Element>();
+        List<ItemObject> issues = new ArrayList<>();
         for (Pair<String, String> id : issueIds) {
-            Element issue = mappedIssues.get(id.getLeft());
-            if (issue != null) {
-                // Add the Note field if there's one specified by the user
-                String note = id.getRight();
-                if (!StringUtils.isBlank(note)) {
-                    Element noteElement = new Element(YouTrackField.NOTE);
-                    noteElement.addContent(note);
-                    issue.addContent(noteElement);
-                }
-                issues.add(issue);
-            }
+            JsonObject document = getJsonDocument(youTrackServer, id.getLeft(), parameters.getMaxCount());
+            List<ItemObject> itemObjectList = buildIssues(document, youTrackServer);
+            issues.addAll(itemObjectList);
         }
 
         return issues;
-    }
-
-    /**
-     * @param ids the list of YouTrack issue ids specified by the user
-     * @return the JQL query that will return all YouTrack issues specified by the user
-     */
-    public String constructJQLQuery(List<Pair<String, String>> ids)
-    {
-        StringBuffer buffer = new StringBuffer("issueKey in (");
-        Iterator<Pair<String, String>> it = ids.iterator();
-        while (it.hasNext()) {
-            buffer.append(it.next().getLeft());
-            if (it.hasNext()) {
-                buffer.append(',');
-            }
-        }
-        buffer.append(')');
-        return buffer.toString();
     }
 
     /**
