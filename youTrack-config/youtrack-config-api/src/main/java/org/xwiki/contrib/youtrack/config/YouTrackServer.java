@@ -62,7 +62,7 @@ public class YouTrackServer
      */
     public String getURL()
     {
-        return this.url;
+        return this.url.replaceAll("/$", "");
     }
 
     /**

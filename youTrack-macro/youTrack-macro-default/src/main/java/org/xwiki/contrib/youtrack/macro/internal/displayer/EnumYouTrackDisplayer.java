@@ -25,6 +25,10 @@ import org.xwiki.contrib.youtrack.macro.YouTrackFields;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
 import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.GroupBlock;
+import org.xwiki.rendering.block.ListItemBlock;
+import org.xwiki.rendering.block.NumberedListBlock;
+import org.xwiki.rendering.block.ParagraphBlock;
 import org.xwiki.rendering.block.SpaceBlock;
 
 import javax.inject.Named;
@@ -55,7 +59,7 @@ public class EnumYouTrackDisplayer extends AbstractYouTrackDisplayer
     @Override
     public List<Block> display(Collection<ItemObject> issues, YouTrackMacroParameters parameters)
     {
-        List<Block> blocks = new ArrayList<>();
+        List<Block> enumItemBlocks = new ArrayList<>();
 
         YouTrackFields fields = normalizeFields(parameters);
         Iterator<ItemObject> issueIt = issues.iterator();
@@ -65,18 +69,18 @@ public class EnumYouTrackDisplayer extends AbstractYouTrackDisplayer
             while (it.hasNext()) {
                 YouTrackField field = it.next();
                 // Use the displayer for the field
-                blocks.addAll(getFieldDisplayer(field).displayField(field, issue, parameters));
+                enumItemBlocks.addAll(getFieldDisplayer(field).displayField(field, issue, parameters));
                 // Add space to separate fields, unless we're on the last field
                 if (it.hasNext()) {
-                    blocks.add(new SpaceBlock());
+                    enumItemBlocks.add(new SpaceBlock());
                 }
             }
             // Add space to separate issues, unless we're on the last field
             if (issueIt.hasNext()) {
-                blocks.add(new SpaceBlock());
+                enumItemBlocks.add(new SpaceBlock());
             }
         }
-        return blocks;
+        return Arrays.asList(new ParagraphBlock(enumItemBlocks));
     }
 
     @Override

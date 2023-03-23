@@ -20,9 +20,18 @@
 package org.xwiki.contrib.youtrack.macro.internal.displayer.field;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.contrib.youtrack.macro.YouTrackField;
+import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
+import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.WordBlock;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Field Displayer for the issue resolved date.
@@ -35,4 +44,16 @@ import javax.inject.Singleton;
 @Singleton
 public class ResolvedYouTrackFieldDisplayer extends AbstractDateYouTrackFieldDisplayer
 {
+    @Override
+    public List<Block> displayField(YouTrackField field, ItemObject issue, YouTrackMacroParameters parameters)
+    {
+        List<Block> result = Collections.emptyList();
+
+        String value = issue.getResolved();
+        if (value != null) {
+            result = Arrays.<Block>asList(new WordBlock(new SimpleDateFormat("yyyy-MM-dd")
+                    .format(Long.valueOf(value))));
+        }
+        return result;
+    }
 }

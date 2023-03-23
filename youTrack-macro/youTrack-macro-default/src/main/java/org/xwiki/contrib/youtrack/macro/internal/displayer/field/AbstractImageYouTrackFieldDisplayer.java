@@ -50,7 +50,7 @@ public abstract class AbstractImageYouTrackFieldDisplayer implements YouTrackFie
         ResourceReference reference = new ResourceReference(issue.getLink(), ResourceType.URL);
         Map<String, String> resourceParameters = new HashMap<String, String>();
         resourceParameters.put("alt", issue.getSummary());
-        resourceParameters.put("title", issue.getType());
+        resourceParameters.put("title", issue.getCustomField(YouTrackField.TYPE.getId()).getName());
         result = Arrays.<Block>asList(new ImageBlock(reference, false, resourceParameters));
         return result;
     }

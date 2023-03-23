@@ -43,7 +43,7 @@ import java.util.List;
  * @since 4.2M1
  */
 @Component
-@Named("youtrack")
+@Named("YouTrack")
 @Singleton
 public class YouTrackMacro extends AbstractMacro<YouTrackMacroParameters>
 {

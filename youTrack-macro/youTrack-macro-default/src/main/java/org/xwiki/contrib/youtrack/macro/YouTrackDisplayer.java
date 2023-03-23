@@ -22,6 +22,7 @@ package org.xwiki.contrib.youtrack.macro;
 import org.xwiki.component.annotation.Role;
 import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.macro.MacroExecutionException;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,5 +48,5 @@ public interface YouTrackDisplayer
      *            display
      * @return the list of Blocks rerpesenting what to display
      */
-    List<Block> display(Collection<ItemObject> issues, YouTrackMacroParameters parameters);
+    List<Block> display(Collection<ItemObject> issues, YouTrackMacroParameters parameters) throws MacroExecutionException;
 }

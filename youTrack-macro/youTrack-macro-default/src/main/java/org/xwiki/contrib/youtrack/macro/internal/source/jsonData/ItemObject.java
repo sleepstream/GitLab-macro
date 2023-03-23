@@ -19,7 +19,10 @@
  */
 package org.xwiki.contrib.youtrack.macro.internal.source.jsonData;
 
+import com.google.gson.JsonArray;
 import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -43,13 +46,26 @@ public class ItemObject {
     @SerializedName("created")
     private String created;
 
-    @SerializedName("$type")
-    private String type;
+    @SerializedName("reporter")
+    private ReporterObject reporter;
 
     @SerializedName("customFields")
     private List<CustomFields> customFieldsList;
 
     private String link;
+
+    public ItemObject(String summary, String id, String updated, String resolved,
+                      String created, List<CustomFields> customFieldsList, ReporterObject reporter,
+                      String link) {
+        this.summary = summary;
+        this.id = id;
+        this.updated = updated;
+        this.resolved = resolved;
+        this.created = created;
+        this.customFieldsList = customFieldsList;
+        this.reporter = reporter;
+        this.link = link;
+    }
 
     public String getSummary() {
         return summary;
@@ -57,10 +73,6 @@ public class ItemObject {
 
     public String getId() {
         return id;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public String getUpdated() {
@@ -83,6 +95,10 @@ public class ItemObject {
         this.link = link;
     }
 
+    public ReporterObject getReporter() {
+        return reporter;
+    }
+
     public List<CustomFields> getCustomFieldsList() {
         return customFieldsList;
     }
@@ -94,7 +110,7 @@ public class ItemObject {
         if (result.isPresent()) {
             return result.get();
         } else {
-            throw new UnsupportedOperationException(String.format("Field %s is not supported", id));
+            throw new UnsupportedOperationException(String.format("Field %s is not supported for task %s", id, this.id));
         }
     }
 }

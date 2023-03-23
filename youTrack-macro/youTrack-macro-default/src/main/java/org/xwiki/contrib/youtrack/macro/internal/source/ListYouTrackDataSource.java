@@ -93,8 +93,7 @@ public class ListYouTrackDataSource extends AbstractYouTrackDataSource
         List<ItemObject> issues = new ArrayList<>();
         for (Pair<String, String> id : issueIds) {
             JsonObject document = getJsonDocument(youTrackServer, id.getLeft(), parameters.getMaxCount());
-            List<ItemObject> itemObjectList = buildIssues(document, youTrackServer);
-            issues.addAll(itemObjectList);
+            issues.add(buildIssues(document, youTrackServer));
         }
 
         return issues;

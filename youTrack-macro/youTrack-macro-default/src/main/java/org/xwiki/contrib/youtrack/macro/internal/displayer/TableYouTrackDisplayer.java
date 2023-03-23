@@ -31,6 +31,7 @@ import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
 import org.xwiki.rendering.block.TableRowBlock;
 import org.xwiki.rendering.block.VerbatimBlock;
+import org.xwiki.rendering.macro.MacroExecutionException;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -58,7 +59,7 @@ public class TableYouTrackDisplayer extends AbstractYouTrackDisplayer
                 YouTrackField.CREATED));
 
     @Override
-    public List<Block> display(Collection<ItemObject> issues, YouTrackMacroParameters parameters)
+    public List<Block> display(Collection<ItemObject> issues, YouTrackMacroParameters parameters) throws MacroExecutionException
     {
         List<Block> rowBlocks = new ArrayList<>();
 
@@ -77,8 +78,15 @@ public class TableYouTrackDisplayer extends AbstractYouTrackDisplayer
             List<Block> dataCellBlocks = new ArrayList<>();
             for (YouTrackField field : fields) {
                 // Use the displayer for the field
-                dataCellBlocks.add(new TableCellBlock(getFieldDisplayer(field).displayField(field,
-                        issue, parameters)));
+                try {
+                    dataCellBlocks.add(new TableCellBlock(getFieldDisplayer(field).displayField(field,
+                            issue, parameters)));
+                } catch (NullPointerException ex) {
+                    throw new MacroExecutionException(String.format("Field not supported %s  for issue %s\n%s",
+                            field.getId(), issue.getCustomField(field.getId()).getName(),
+                            Arrays.toString(ex.getStackTrace())));
+                }
+
             }
             rowBlocks.add(new TableRowBlock(dataCellBlocks));
         }

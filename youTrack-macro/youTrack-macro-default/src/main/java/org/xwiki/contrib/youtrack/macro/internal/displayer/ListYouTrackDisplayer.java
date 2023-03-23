@@ -27,6 +27,7 @@ import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
 import org.xwiki.rendering.block.ListItemBlock;
+import org.xwiki.rendering.block.NumberedListBlock;
 import org.xwiki.rendering.block.SpaceBlock;
 
 import javax.inject.Named;
@@ -74,7 +75,7 @@ public class ListYouTrackDisplayer extends AbstractYouTrackDisplayer
             }
             listItemBlocks.add(new ListItemBlock(itemBlocks));
         }
-        return Arrays.asList(new BulletedListBlock(listItemBlocks));
+        return Arrays.asList(new NumberedListBlock(listItemBlocks));
     }
 
     @Override

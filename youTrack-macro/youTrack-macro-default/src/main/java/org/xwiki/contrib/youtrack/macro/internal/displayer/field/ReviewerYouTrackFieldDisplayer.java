@@ -26,11 +26,13 @@ import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
 import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.CustomFields;
 import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.ImageBlock;
 import org.xwiki.rendering.block.WordBlock;
+import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,20 +47,32 @@ import java.util.Map;
  * @since 4.2M1
  */
 @Component
-@Named("state")
+@Named("reviewer")
 @Singleton
-public class StateYouTrackFieldDisplayer implements YouTrackFieldDisplayer {
+public class ReviewerYouTrackFieldDisplayer implements YouTrackFieldDisplayer {
 
     @Override
     public List<Block> displayField(YouTrackField field, ItemObject issue, YouTrackMacroParameters parameters)
     {
-        List<Block>  blockList = new ArrayList<>();
+        List<Block> blockList = Collections.emptyList();
         Map<String, String> resourceParameters = new HashMap<String, String>();
-        String status = "No State";
-        if(issue.getCustomField(YouTrackField.STATE.getId()).getValue() != null) {
-            status = issue.getCustomField(YouTrackField.STATE.getId()).getValue().getName();
+        CustomFields reviewer = issue.getCustomField(YouTrackField.REVIEWER.getId());
+        if(reviewer.getValue() != null) {
+            if(reviewer.getValue().getFullName() != null && reviewer.getValue().getAvatarUrl() != null) {
+                resourceParameters.put("alt", reviewer.getValue().getFullName());
+                resourceParameters.put("title", reviewer.getValue().getFullName());
+                resourceParameters.put("width", "25");
+                resourceParameters.put("height", "25");
+                ImageBlock imageBlock = new ImageBlock(
+                        new ResourceReference(reviewer.getValue().getAvatarUrl(),
+                                ResourceType.URL),
+                        false, resourceParameters);
+                blockList = Arrays.<Block>asList(imageBlock, new WordBlock(reviewer.getValue().getFullName()));
+            }
         }
-        blockList.add(new WordBlock(status));
+        if(blockList.size() == 0) {
+            blockList = Collections.singletonList(new WordBlock("Unassigned"));
+        }
         return blockList;
     }
 

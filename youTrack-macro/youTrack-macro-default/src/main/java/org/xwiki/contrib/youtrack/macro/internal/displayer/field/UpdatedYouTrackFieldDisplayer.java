@@ -49,7 +49,7 @@ public class UpdatedYouTrackFieldDisplayer extends AbstractDateYouTrackFieldDisp
     {
         List<Block> result = Collections.emptyList();
 
-        String value = getValue(field, issue);
+        String value = issue.getUpdated();
         if (value != null) {
             result = Arrays.<Block>asList(new WordBlock(new SimpleDateFormat("yyyy-MM-dd")
                     .format(Long.valueOf(value))));

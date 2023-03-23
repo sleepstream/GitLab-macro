@@ -21,39 +21,58 @@ package org.xwiki.contrib.youtrack.macro.internal.displayer.field;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.youtrack.macro.YouTrackField;
+import org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
 import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.FormatBlock;
+import org.xwiki.rendering.block.ImageBlock;
+import org.xwiki.rendering.block.LinkBlock;
+import org.xwiki.rendering.block.VerbatimBlock;
 import org.xwiki.rendering.block.WordBlock;
+import org.xwiki.rendering.listener.Format;
+import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Field Displayer for the issue creation date.
+ * Displayer for the "reporter" YouTrack field
  *
  * @version $Id$
  * @since 4.2M1
  */
 @Component
-@Named("created")
+@Named("reporter")
 @Singleton
-public class CreatedYouTrackFieldDisplayer extends AbstractDateYouTrackFieldDisplayer
-{
+public class ReporterYouTrackFieldDisplayer implements YouTrackFieldDisplayer {
+
     @Override
     public List<Block> displayField(YouTrackField field, ItemObject issue, YouTrackMacroParameters parameters)
     {
-        List<Block> result = Collections.emptyList();
-
-        String value = issue.getCreated();
-        if (value != null) {
-            result = Arrays.<Block>asList(new WordBlock(new SimpleDateFormat("yyyy-MM-dd")
-                    .format(Long.valueOf(value))));
+        List<Block> blockList = Collections.emptyList();
+        Map<String, String> resourceParameters = new HashMap<String, String>();
+        if(issue.getReporter() != null) {
+            if(issue.getReporter().getFullName() != null && issue.getReporter().getAvatarUrl() != null) {
+                resourceParameters.put("alt", issue.getReporter().getFullName());
+                resourceParameters.put("title", issue.getReporter().getFullName());
+                resourceParameters.put("width", "25");
+                resourceParameters.put("height", "25");
+                ImageBlock imageBlock = new ImageBlock(
+                        new ResourceReference(issue.getReporter().getAvatarUrl(),
+                                ResourceType.URL),
+                        false, resourceParameters);
+                blockList = Arrays.<Block>asList(imageBlock, new WordBlock(issue.getReporter().getFullName()));
+            }
         }
-        return result;
+        return blockList;
     }
+
 }

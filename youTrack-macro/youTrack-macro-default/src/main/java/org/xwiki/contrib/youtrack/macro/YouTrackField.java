@@ -40,7 +40,6 @@ public class YouTrackField
      * YouTrack Summary field.
      */
     public static final YouTrackField SUMMARY;
-
     /**
      * YouTrack Key field (eg "XWIKI-1000").
      */
@@ -57,9 +56,19 @@ public class YouTrackField
     public static final YouTrackField STATE;
 
     /**
+     * YouTrack Sprints field (eg Closed, Open, etc).
+     */
+    public static final YouTrackField SPRINTS;
+
+    /**
      * YouTrack Assignee field (the person assigned to fix the issue).
      */
     public static final YouTrackField ASSIGNEE;
+
+    /**
+     * YouTrack Reviewer field (the person assigned to review the issue).
+     */
+    public static final YouTrackField REVIEWER;
 
     /**
      * YouTrack Reporter field (the person who reported the issue).
@@ -81,10 +90,15 @@ public class YouTrackField
      */
     public static final YouTrackField RESOLVED;
 
-//    /**
-//     * YouTrack Fix Version field (the version in which the issue was resolved or closed).
-//     */
-//    public static final YouTrackField FIXVERSION;
+    /**
+     * YouTrack Priority field (the priority of the issue).
+     */
+    public static final YouTrackField PRIORITY;
+
+    /**
+     * YouTrack Fix Version field (the version in which the issue was resolved or closed).
+     */
+    public static final YouTrackField FIXVERSION;
 
 //    /**
 //     * YouTrack Affected Versions field (the list of Versions for which the issue was reported).
@@ -125,7 +139,7 @@ public class YouTrackField
 
     private static final String DATE_TYPE = "date";
 
-    private static final String TYPE_ID = "$type";
+    private static final String TYPE_ID = "type";
 
     static {
         SUMMARY = new YouTrackField("summary", "Summary", TEXT_TYPE);
@@ -134,7 +148,7 @@ public class YouTrackField
         KEY = new YouTrackField("idReadable", "Key", TEXT_TYPE);
         DEFAULT_FIELDS.put(KEY.getId(), KEY);
 
-        TYPE = new YouTrackField(TYPE_ID, "Type", TEXT_TYPE);
+        TYPE = new YouTrackField("type", "Type", TEXT_TYPE);
         DEFAULT_FIELDS.put(TYPE.getId(), TYPE);
 
         STATE = new YouTrackField("state", "State", TEXT_TYPE);
@@ -146,6 +160,9 @@ public class YouTrackField
         REPORTER = new YouTrackField("reporter", "Reporter", TEXT_TYPE);
         DEFAULT_FIELDS.put(REPORTER.getId(), REPORTER);
 
+        REVIEWER = new YouTrackField("reviewer", "Reviewer", TEXT_TYPE);
+        DEFAULT_FIELDS.put(REVIEWER.getId(), REVIEWER);
+
         CREATED = new YouTrackField("created", "Created Date", DATE_TYPE);
         DEFAULT_FIELDS.put(CREATED.getId(), CREATED);
 
@@ -155,11 +172,14 @@ public class YouTrackField
         RESOLVED = new YouTrackField("resolved", "Resolved Date", DATE_TYPE);
         DEFAULT_FIELDS.put(RESOLVED.getId(), RESOLVED);
 
-//        FIXVERSION = new YouTrackField("fixVersion", "Fixed in", TEXT_TYPE);
-//        DEFAULT_FIELDS.put(FIXVERSION.getId(), FIXVERSION);
+        PRIORITY = new YouTrackField("priority", "Priority", TEXT_TYPE);
+        DEFAULT_FIELDS.put(PRIORITY.getId(), PRIORITY);
 
-//        VERSION = new YouTrackField("version", "Affected Versions", TEXT_TYPE);
-//        DEFAULT_FIELDS.put(VERSION.getId(), VERSION);
+        FIXVERSION = new YouTrackField("fix versions", "Fixed in", TEXT_TYPE);
+        DEFAULT_FIELDS.put(FIXVERSION.getId(), FIXVERSION);
+
+        SPRINTS = new YouTrackField("sprints", "Sprints", TEXT_TYPE);
+        DEFAULT_FIELDS.put(SPRINTS.getId(), SPRINTS);
 
 //        COMPONENT = new YouTrackField("component", "Component", TEXT_TYPE);
 //        DEFAULT_FIELDS.put(COMPONENT.getId(), COMPONENT);

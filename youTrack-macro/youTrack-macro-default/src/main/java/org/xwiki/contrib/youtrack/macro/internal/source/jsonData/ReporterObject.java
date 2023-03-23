@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -17,22 +16,31 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.xwiki.contrib.youtrack</groupId>
-    <artifactId>youtrack</artifactId>
-    <version>1.3.90</version>
-  </parent>
-  <artifactId>youtrack-config</artifactId>
-  <name>YouTrack - Config - Parent POM</name>
-  <packaging>pom</packaging>
-  <description>YouTrack Configuration modules (API, Admin UI)</description>
-  <modules>
-    <!-- Sorted Alphabetically -->
-    <module>youtrack-config-api</module>
-    <module>youTrack-config-platform</module>
-    <module>youTrack-config-ui</module>
-  </modules>
-</project>
+ */
+package org.xwiki.contrib.youtrack.macro.internal.source.jsonData;
+
+import com.google.gson.annotations.SerializedName;
+import lombok.Data;
+
+@Data
+public class ReporterObject {
+
+    @SerializedName("fullName")
+    private String fullName;
+
+    @SerializedName("avatarUrl")
+    private String avatarUrl;
+
+    public ReporterObject(String fullName, String avatarUrl) {
+        this.fullName = fullName;
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+}

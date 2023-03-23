@@ -32,11 +32,6 @@ import java.util.Properties;
  */
 public class YouTrackMacroParameters
 {
-//    /**
-//     * @see #getURL()
-//     */
-//    private String url;
-
     /**
      * @see #getSource()
      */
@@ -59,29 +54,7 @@ public class YouTrackMacroParameters
      */
     private YouTrackFields fields = new YouTrackFields();
 
-    /**
-     * @see #getFieldNames()
-     */
-    private List<String> fieldNames;
-
     private int maxCount = -1;
-
-//    /**
-//     * @param url see {@link #getURL()}
-//     */
-//    @PropertyDescription("the youtrack. Server URL")
-//    public void setURL(String url)
-//    {
-//        this.url = url;
-//    }
-//
-//    /**
-//     * @return the youtrack. Server URL (e.g. {@code http://youtrack..xwiki.org})
-//     */
-//    public String getURL()
-//    {
-//        return this.url;
-//    }
 
     /**
      * @param id see {@link #getId()}
@@ -100,15 +73,6 @@ public class YouTrackMacroParameters
     public String getId()
     {
         return this.id;
-    }
-
-    /**
-     * @param source see {@link #getSource()}
-     */
-    @PropertyDescription("how youtrack. issues are defined (e.g. \"jql\", \"list\")")
-    public void setSource(String source)
-    {
-        this.source = source;
     }
 
     /**
@@ -146,10 +110,22 @@ public class YouTrackMacroParameters
     }
 
     /**
+     * @return the maximum number of YouTrack issues to display (if not specified defaults
+     * to the value configured in your
+     *         YouTrack instance)
+     */
+    public int getMaxCount()
+    {
+        return this.maxCount;
+    }
+
+    /**
      * @param fields see {@link #getFields()}
      */
-    @PropertyDescription("the fields to be displayed with optional labels and types (default field list depends "
-            + "on the style used). Format is {@code id1:label1!type1,id2:label2!type2}")
+    @PropertyDescription("the fields to be displayed (default field list depends "
+            + "on the style used). Format is {field1,field2,field3}; \n "
+            + "Available fields: idReadable, summary, type, state, priority, sprints, reporter, assignee, reviewer, created, "
+            + "updated, resolved, fix versions")
     public void setFields(YouTrackFields fields)
     {
         this.fields = fields;
@@ -159,42 +135,10 @@ public class YouTrackMacroParameters
      * @return the list of YouTrack fields to display along with optional labels and types
      * (if not defined, a default list
      *         of fields defined by the chosen Displayer will be used).
-     *         String format is {@code id1:label1!type1,id2:label2!type2}
+     *         String format is {field1,field2,field3}
      */
     public YouTrackFields getFields()
     {
         return this.fields;
-    }
-
-    /**
-     * @param fieldNames see {@link #getFieldNames()}
-     * @deprecated starting with 8.3 use {@link #setFields(YouTrackFields)} using the format {@code id:label!type}
-     */
-    @PropertyDescription("the pretty names of the fields in the order in which they are displayed")
-    @Deprecated
-    public void setFieldNames(List<String> fieldNames)
-    {
-        this.fieldNames = fieldNames;
-    }
-
-    /**
-     * @return the names to use for YouTrack issue fields for Displayers displaying the field names (eg the Table
-     *         Data Source)
-     * @deprecated starting with 8.3 use {@link #setFields(YouTrackFields)} using the format {@code id:label!type}
-     */
-    @Deprecated
-    public List<String> getFieldNames()
-    {
-        return this.fieldNames;
-    }
-
-    /**
-     * @return the maximum number of YouTrack issues to display (if not specified defaults
-     * to the value configured in your
-     *         YouTrack instance)
-     */
-    public int getMaxCount()
-    {
-        return this.maxCount;
     }
 }

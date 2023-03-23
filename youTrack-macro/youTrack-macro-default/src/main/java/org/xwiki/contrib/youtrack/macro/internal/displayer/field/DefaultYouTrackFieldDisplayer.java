@@ -50,7 +50,6 @@ public class DefaultYouTrackFieldDisplayer extends AbstractYouTrackFieldDisplaye
         if (value != null) {
             result = Arrays.<Block>asList(new VerbatimBlock(value, true));
         }
-
         return result;
     }
 }

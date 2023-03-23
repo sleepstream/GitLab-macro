@@ -24,6 +24,9 @@ import org.xwiki.contrib.youtrack.macro.YouTrackField;
 import org.xwiki.contrib.youtrack.macro.YouTrackFieldDisplayer;
 import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.CustomFields;
 import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ValueObject;
+
+import java.util.stream.Collectors;
 
 /**
  * Helper to extract field values from YouTrack XML.
@@ -43,26 +46,14 @@ public abstract class AbstractYouTrackFieldDisplayer implements YouTrackFieldDis
      */
     protected String getValue(YouTrackField field, ItemObject issue)
     {
-        if (field.equals(YouTrackField.TYPE)) {
-            return issue.getType();
-        }
-        if(field.equals(YouTrackField.SUMMARY)) {
+        if(field.equals(YouTrackField.SUMMARY) || field.getId().equalsIgnoreCase(YouTrackField.SUMMARY.getId())) {
             return issue.getSummary();
-        }
-        if(field.equals(YouTrackField.KEY)) {
-            return issue.getId();
-        }
-        if(field.equals(YouTrackField.CREATED)) {
-            return issue.getCreated();
-        }
-        if(field.equals(YouTrackField.UPDATED)) {
-            return issue.getUpdated();
-        }
-        if(field.equals(YouTrackField.RESOLVED)) {
-            return issue.getResolved();
         }
 
         CustomFields customField = issue.getCustomField(field.getId());
+        if(customField.getValues() != null) {
+            return customField.getValues().stream().map(ValueObject::getName).collect(Collectors.joining(", "));
+        }
         return customField.getValue().getName();
     }
 }

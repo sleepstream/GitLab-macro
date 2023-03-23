@@ -28,7 +28,27 @@ public class ValueObject {
     @SerializedName("name")
     private String name;
 
+    @SerializedName("fullName")
+    private String fullName;
+
+    @SerializedName("avatarUrl")
+    private String avatarUrl;
+
     public String getName() {
         return name;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public ValueObject(String name, String fullName, String avatarUrl) {
+        this.name = name;
+        this.fullName = fullName;
+        this.avatarUrl = avatarUrl;
     }
 }

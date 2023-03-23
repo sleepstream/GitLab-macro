@@ -89,17 +89,7 @@ public abstract class AbstractYouTrackDisplayer implements YouTrackDisplayer
         } else {
             // Normalize field data, i.e. fill up any blank by using default field data
 
-            // Step 1: For backward-compatiblity reasons, use the field names defined in the macro parameters if defined
-            if (parameters.getFieldNames() != null) {
-                List<String> fieldNames = parameters.getFieldNames();
-                for (int i = 0; i < fields.size(); i++) {
-                    if (StringUtils.isBlank(fields.get(i).getLabel()) && fieldNames.size() > i) {
-                        fields.get(i).setLabel(fieldNames.get(i));
-                    }
-                }
-            }
-
-            // Step 2: Normalize using default fields definitions
+            // Normalize using default fields definitions
             for (YouTrackField field : fields) {
                 normalizeField(field);
             }

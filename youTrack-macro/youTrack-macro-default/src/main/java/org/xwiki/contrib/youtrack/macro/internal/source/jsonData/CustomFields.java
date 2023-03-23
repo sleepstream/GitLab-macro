@@ -22,10 +22,9 @@ package org.xwiki.contrib.youtrack.macro.internal.source.jsonData;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-/**
- *
- */
 public class CustomFields {
 
     @SerializedName("name")
@@ -34,11 +33,23 @@ public class CustomFields {
     @SerializedName("value")
     private ValueObject value;
 
+    private List<ValueObject> values;
+
+    public CustomFields(String name, ValueObject value, List<ValueObject> values) {
+        this.name = name;
+        this.value = value;
+        this.values = values;
+    }
+
     public String getName() {
         return name;
     }
 
     public ValueObject getValue() {
         return value;
+    }
+
+    public List<ValueObject> getValues() {
+        return values;
     }
 }

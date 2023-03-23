@@ -21,19 +21,32 @@ package org.xwiki.contrib.youtrack.macro.internal.source;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.xwiki.contrib.youtrack.config.YouTrackConfiguration;
 import org.xwiki.contrib.youtrack.config.YouTrackServer;
 import org.xwiki.contrib.youtrack.macro.YouTrackDataSource;
 import org.xwiki.contrib.youtrack.macro.YouTrackMacroParameters;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.CustomFields;
 import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ItemObject;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ReporterObject;
+import org.xwiki.contrib.youtrack.macro.internal.source.jsonData.ValueObject;
 import org.xwiki.rendering.macro.MacroExecutionException;
 
 import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -50,7 +63,7 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
      * URL Prefix to use to build the full JQL URL (doesn't contain the JQL query itself which needs to be appended).
      */
     private static final String JQL_URL_PREFIX =
-        "api/issues/";
+        "/api/issues/";
 
     @Inject
     private YouTrackConfiguration configuration;
@@ -69,15 +82,71 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
      * @param youTrackServer
      * @return the list of XML Elements for each YouTrack issue, indexed in a Map with the issue id as the key
      */
-    protected List<ItemObject> buildIssues(JsonObject jsonObject, YouTrackServer youTrackServer)
-    {
+    protected ItemObject buildIssues(JsonObject jsonObject, YouTrackServer youTrackServer) throws MacroExecutionException {
 
-        Gson gson = new GsonBuilder().create();
-        ItemObject item = gson.fromJson(jsonObject, ItemObject.class);
+        GsonBuilder gsonBuilder = new GsonBuilder();
 
-        item.setLink(youTrackServer.getURL() + "issue/" + item.getId());
+        JsonDeserializer<ItemObject> deserializer = (json, typeOfT, context) -> {
+            JsonObject jsonObject1 = json.getAsJsonObject();
+            List<CustomFields> customFieldsList = new ArrayList<>();
 
-        return Collections.singletonList(item);
+            for (JsonElement jsonElement : jsonObject1.get("customFields").getAsJsonArray()) {
+                JsonObject item = jsonElement.getAsJsonObject();
+                List<ValueObject> valueObjectList = null;
+                ValueObject valueObject = null;
+                if (item.get("value").isJsonArray()) {
+                    valueObjectList = new ArrayList<>();
+                    for (JsonElement element : item.get("value").getAsJsonArray()) {
+                        JsonObject value = element.getAsJsonObject();
+                        valueObjectList.add(new ValueObject(
+                                        value.get("name").isJsonNull() ? null : value.get("name").getAsString(),
+                                        value.get("fullName") == null || value.get("fullName").isJsonNull() ? null : value.get("fullName").getAsString(),
+                                        value.get("avatarUrl") == null || value.get("avatarUrl").isJsonNull()
+                                                ? null
+                                                :  youTrackServer.getURL() + value.get("avatarUrl").getAsString()
+                                )
+                        );
+                    }
+                } else if(!item.get("value").isJsonNull()){
+                    JsonObject value = item.get("value").getAsJsonObject();
+                    valueObject = new ValueObject(
+                            value.get("name").isJsonNull() ? null : value.get("name").getAsString(),
+                            value.get("fullName") == null || value.get("fullName").isJsonNull() ? null : value.get("fullName").getAsString(),
+                            value.get("avatarUrl") == null || value.get("avatarUrl").isJsonNull()
+                                    ? null
+                                    :  youTrackServer.getURL() + value.get("avatarUrl").getAsString()
+                    );
+                }
+                customFieldsList.add(new CustomFields(item.get("name").getAsString(), valueObject, valueObjectList));
+            }
+
+            ReporterObject reporterObject = null;
+            if(jsonObject1.get("reporter") != null && !jsonObject1.get("reporter").isJsonNull()) {
+                JsonObject reporter = jsonObject1.get("reporter").getAsJsonObject();
+                reporterObject = new ReporterObject(reporter.get("fullName").getAsString(),
+                        youTrackServer.getURL() + reporter.get("avatarUrl").getAsString());
+            }
+
+            return new ItemObject(
+                    jsonObject1.get("summary").isJsonNull() ? null : jsonObject1.get("summary").getAsString(),
+                    jsonObject1.get("idReadable").isJsonNull() ? null : jsonObject1.get("idReadable").getAsString(),
+                    jsonObject1.get("updated").isJsonNull() ? null : jsonObject1.get("updated").getAsString(),
+                    jsonObject1.get("resolved").isJsonNull() ? null : jsonObject1.get("resolved").getAsString(),
+                    jsonObject1.get("created").isJsonNull() ? null : jsonObject1.get("created").getAsString(),
+                    customFieldsList, reporterObject,
+                    null
+            );
+        };
+        gsonBuilder.registerTypeAdapter(ItemObject.class, deserializer);
+        Gson customGson = gsonBuilder.create();
+        try {
+            ItemObject itemObject = customGson.fromJson(jsonObject, ItemObject.class);
+            itemObject.setLink(youTrackServer.getURL() + "/issue/" + itemObject.getId());
+            return itemObject;
+        } catch (JsonSyntaxException exception) {
+            throw new MacroExecutionException("Error when parsing JSON: " + jsonObject + "\n"
+                    + Arrays.toString(exception.getStackTrace()));
+        }
     }
 
     /**
@@ -90,14 +159,13 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
     public JsonObject getJsonDocument(YouTrackServer youTrackServer, String jqlQuery, int maxCount)
         throws MacroExecutionException
     {
-        JsonObject document;
+        JsonObject document = null;
         String urlString = computeFullURL(youTrackServer, jqlQuery, maxCount);
         try {
             document = this.youtrackFetcher.fetch(urlString, youTrackServer);
         } catch (Exception e) {
             throw new MacroExecutionException(String.format("Failed to retrieve YouTrack data from [%s] for JQL [%s] "
-                            + "url [%s]",
-                youTrackServer.getURL(), jqlQuery, urlString), e);
+                            + "url [%s]", youTrackServer.getURL(), jqlQuery, urlString), e);
         }
         return document;
     }
@@ -111,10 +179,11 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
 //            additionalQueryString.append("&tempMax=").append(maxCount);
 //        }
 
-        additionalQueryString.append("?fields=id,idReadable,summary,type,created,updated,resolved,"
-                + "customFields(name,value(name))"
-                + "&customFields=type&customFields=assignee&customFields=priority&customFields=state");
-//                + "&customFields=fix+versions");
+        additionalQueryString.append("?fields=idReadable,summary,reporter(fullName,avatarUrl)"
+                + ",created,updated,resolved,"
+                + "customFields(name,value(name,fullName,avatarUrl))"
+                + "&customFields=type&customFields=assignee&customFields=priority&customFields=state"
+                + "&customFields=reviewer&customFields=fix+versions&customFields=sprints");
 
         // Note: we encode using UTF8 since it's the W3C recommendation.
         // See http://www.w3.org/TR/html40/appendix/notes.html#non-ascii-chars
