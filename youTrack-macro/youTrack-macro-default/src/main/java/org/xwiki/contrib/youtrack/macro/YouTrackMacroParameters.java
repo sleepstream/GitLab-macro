@@ -76,6 +76,15 @@ public class YouTrackMacroParameters
     }
 
     /**
+     * @param source see {@link #getSource()}
+     */
+    @PropertyDescription("How YouTrack issues are defined (e.g. \"jql\", \"list\")")
+    public void setSource(String source)
+    {
+        this.source = source;
+    }
+
+    /**
      * @return the hint of the data source to use to fetch youtrack. issues
      */
     public String getSource()

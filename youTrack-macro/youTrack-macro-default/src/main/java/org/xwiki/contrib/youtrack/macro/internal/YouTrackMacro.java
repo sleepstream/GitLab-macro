@@ -56,7 +56,7 @@ public class YouTrackMacro extends AbstractMacro<YouTrackMacroParameters>
     /**
      * The description of the macro content.
      */
-    private static final String CONTENT_DESCRIPTION = "The YouTrack issues to retrieve";
+    private static final String CONTENT_DESCRIPTION = "The YouTrack issues to retrieve or JQL request";
 
     /**
      * Used to get YouTrack Data Source and YouTrack Displayer matching what the user has asked for.

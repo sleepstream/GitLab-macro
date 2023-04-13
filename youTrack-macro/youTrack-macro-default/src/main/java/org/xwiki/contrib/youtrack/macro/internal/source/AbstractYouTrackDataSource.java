@@ -21,12 +21,9 @@ package org.xwiki.contrib.youtrack.macro.internal.source;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.xwiki.contrib.youtrack.config.YouTrackConfiguration;
@@ -41,12 +38,9 @@ import org.xwiki.rendering.macro.MacroExecutionException;
 
 import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -63,7 +57,7 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
      * URL Prefix to use to build the full JQL URL (doesn't contain the JQL query itself which needs to be appended).
      */
     private static final String JQL_URL_PREFIX =
-        "/api/issues/";
+        "/api/issues";
 
     @Inject
     private YouTrackConfiguration configuration;
@@ -170,6 +164,27 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
         return document;
     }
 
+    /**
+     * @param youTrackServer the YouTrack Server definition to use
+     * @param jqlQuery the JQL query to execute
+     * @param maxCount the max number of issues to get
+     * @return the XML document containing the matching YouTrack issues
+     * @throws MacroExecutionException if the YouTrack issues cannot be retrieved
+     */
+    public List<JsonObject> getJsonDocumentByJQL(YouTrackServer youTrackServer, String jqlQuery, int maxCount)
+            throws MacroExecutionException
+    {
+        List<JsonObject> documentsList = null;
+        String urlString = computeFullURLWithJQL(youTrackServer, jqlQuery, maxCount);
+        try {
+            documentsList = this.youtrackFetcher.fetchList(urlString, youTrackServer);
+        } catch (Exception e) {
+            throw new MacroExecutionException(String.format("Failed to retrieve YouTrack data from [%s] for JQL [%s] "
+                    + "url [%s]", youTrackServer.getURL(), jqlQuery, urlString), e);
+        }
+        return documentsList;
+    }
+
     protected String computeFullURL(YouTrackServer youTrackServer, String jqlQuery, int maxCount)
     {
         StringBuilder additionalQueryString = new StringBuilder();
@@ -187,8 +202,32 @@ public abstract class AbstractYouTrackDataSource implements YouTrackDataSource
 
         // Note: we encode using UTF8 since it's the W3C recommendation.
         // See http://www.w3.org/TR/html40/appendix/notes.html#non-ascii-chars
-        String fullURL = String.format("%s%s%s%s", youTrackServer.getURL(), JQL_URL_PREFIX, encode(jqlQuery),
+        String fullURL = String.format("%s%s%s%s", youTrackServer.getURL(), JQL_URL_PREFIX + "/", encode(jqlQuery),
             additionalQueryString);
+        this.logger.debug("Computed YouTrack URL [{}]", fullURL);
+
+        return fullURL;
+    }
+
+    protected String computeFullURLWithJQL(YouTrackServer youTrackServer, String jqlQuery, int maxCount)
+    {
+        StringBuilder additionalQueryString = new StringBuilder();
+
+        // Restrict number of issues returned if need be
+//        if (maxCount > -1) {
+//            additionalQueryString.append("&tempMax=").append(maxCount);
+//        }
+
+        additionalQueryString.append("?fields=idReadable,summary,reporter(fullName,avatarUrl)"
+                + ",created,updated,resolved,"
+                + "customFields(name,value(name,fullName,avatarUrl))"
+                + "&customFields=type&customFields=assignee&customFields=priority&customFields=state"
+                + "&customFields=reviewer&customFields=fix+versions&customFields=sprints&query=");
+
+        // Note: we encode using UTF8 since it's the W3C recommendation.
+        // See http://www.w3.org/TR/html40/appendix/notes.html#non-ascii-chars
+        String fullURL = String.format("%s%s%s%s", youTrackServer.getURL(), JQL_URL_PREFIX, additionalQueryString,
+                encode(jqlQuery));
         this.logger.debug("Computed YouTrack URL [{}]", fullURL);
 
         return fullURL;

@@ -60,6 +60,7 @@ public class URLYouTrackFieldDisplayer extends AbstractYouTrackFieldDisplayer
             }
             List<Block> labelBlocks = Arrays.<Block>asList(new VerbatimBlock(label, true));
             ResourceReference reference = new ResourceReference(value, ResourceType.URL);
+            reference.setParameter("target", "_blank");
             result = Arrays.<Block>asList(new LinkBlock(labelBlocks, reference, true));
         }
 

@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.xwiki.contrib.youtrack</groupId>
     <artifactId>youtrack-macro</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
   </parent>
   <artifactId>youtrack-macro-platform</artifactId>
   <name>YouTrack - Macro - Platform-related Implementation</name>

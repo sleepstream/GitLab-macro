@@ -1,5 +1,6 @@
 org.xwiki.contrib.youtrack.macro.internal.YouTrackMacro
 org.xwiki.contrib.youtrack.macro.internal.source.ListYouTrackDataSource
+org.xwiki.contrib.youtrack.macro.internal.source.SearchYouTrackDataSource
 org.xwiki.contrib.youtrack.macro.internal.source.HTTPYouTrackFetcher
 org.xwiki.contrib.youtrack.macro.internal.source.DefaultYouTrackServerResolver
 org.xwiki.contrib.youtrack.macro.internal.displayer.TableYouTrackDisplayer

@@ -45,6 +45,8 @@ import org.xwiki.contrib.youtrack.config.YouTrackServer;
 import javax.inject.Singleton;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Fetches remotely the XML content at the passed URL.
@@ -76,6 +78,19 @@ public class HTTPYouTrackFetcher
 
         return retrieveRemoteDocument(httpClient, httpGet, targetHost, context);
     }
+
+    public List<JsonObject> fetchList(String urlString, YouTrackServer youTrackServer) throws Exception
+    {
+        HttpGet httpGet = new HttpGet(urlString);
+        CloseableHttpClient httpClient = createHttpClientBuilder(youTrackServer).build();
+
+        HttpHost targetHost = createHttpHost(youTrackServer);
+        HttpClientContext context = HttpClientContext.create();
+        setPreemptiveBasicAuthentication(context, youTrackServer, targetHost);
+
+        return retrieveRemoteDocumentsList(httpClient, httpGet, targetHost, context);
+    }
+
 
     private void setPreemptiveBasicAuthentication(HttpClientContext context, YouTrackServer youTrackServer,
                                                   HttpHost targetHost)
@@ -121,6 +136,24 @@ public class HTTPYouTrackFetcher
                 // it from the <h1> tag.
                 throw new Exception(String.format("Error = [%s]. URL = [%s]",
                 EXTRACTOR.extract(response.getEntity().getContent()), httpGet.getURI().toString()));
+            }
+        }
+    }
+
+    protected List<JsonObject> retrieveRemoteDocumentsList(CloseableHttpClient httpClient, HttpGet httpGet, HttpHost targetHost,
+                                                      HttpClientContext context) throws Exception
+    {
+        try (CloseableHttpResponse response = httpClient.execute(targetHost, httpGet, context)) {
+            // Only parse the content if there was no error.
+            if (response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300) {
+                HttpEntity entity = response.getEntity();
+                String responseString = EntityUtils.toString(entity);
+                return Arrays.asList(new Gson().fromJson(responseString, JsonObject[].class));
+            } else {
+                // The error message is in the HTML. We extract it to perform some good error-reporting, by extracting
+                // it from the <h1> tag.
+                throw new Exception(String.format("Error = [%s]. URL = [%s]",
+                        EXTRACTOR.extract(response.getEntity().getContent()), httpGet.getURI().toString()));
             }
         }
     }

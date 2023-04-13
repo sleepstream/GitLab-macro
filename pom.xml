@@ -29,7 +29,7 @@
   <artifactId>youtrack</artifactId>
   <packaging>pom</packaging>
   <name>YouTrack - Parent POM</name>
-  <version>1.0</version>
+  <version>1.1</version>
   <description>Parent POM for YouTrack-related modules</description>
   <developers>
     <developer>

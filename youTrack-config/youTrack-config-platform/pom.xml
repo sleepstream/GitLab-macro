@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.xwiki.contrib.youtrack</groupId>
     <artifactId>youtrack-config</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
   </parent>
   <artifactId>youtrack-config-platform</artifactId>
   <name>YouTrack - Config - Platform API</name>
